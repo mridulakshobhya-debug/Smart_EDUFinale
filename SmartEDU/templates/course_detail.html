@@ -1,0 +1,479 @@
+{% extends "base_enhanced.html" %}
+
+{% block content %}
+
+<style>
+.interactive-learning-container {
+    display: grid;
+    grid-template-columns: 250px 1fr 280px;
+    gap: 2rem;
+    padding: 2rem 0;
+    min-height: 100vh;
+}
+
+.lesson-sidebar {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.lesson-item {
+    padding: 1rem;
+    background: var(--bg-primary);
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    border: 2px solid var(--border);
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.lesson-item:hover {
+    border-color: var(--primary);
+    background: var(--bg-hover);
+}
+
+.lesson-item.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-color: var(--primary);
+}
+
+.code-editor-wrapper {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 1rem;
+}
+
+.editor-header {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.editor-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.tab-button {
+    padding: 10px 16px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+    border-color: var(--primary);
+}
+
+.tab-button.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-color: var(--primary);
+}
+
+.code-output-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    height: 600px;
+}
+
+.editor-panel, .output-panel {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.editor-textarea {
+    flex: 1;
+    padding: 1rem;
+    background: var(--bg-primary);
+    border: none;
+    outline: none;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    resize: none;
+}
+
+.output-display {
+    flex: 1;
+    padding: 1rem;
+    background: var(--bg-primary);
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.character-guide {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 2px solid var(--border);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.character-avatar {
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.character-message {
+    background: var(--bg-primary);
+    border: 2px solid var(--primary);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--primary);
+    text-align: center;
+    line-height: 1.4;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.btn-control {
+    padding: 12px 16px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-run {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.btn-run:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.btn-reset {
+    background: var(--bg-primary);
+    border: 2px solid var(--border);
+    color: var(--text-primary);
+}
+
+.btn-reset:hover {
+    border-color: var(--primary);
+}
+
+.success-message {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+    border-left: 4px solid #10b981;
+}
+
+@media (max-width: 1400px) {
+    .interactive-learning-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .lesson-sidebar, .character-guide {
+        position: static;
+    }
+}
+
+@media (max-width: 900px) {
+    .code-output-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .editor-textarea, .output-display {
+        min-height: 300px;
+    }
+}
+</style>
+
+<!-- Hero Section -->
+<section class="hero" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1)); padding: 40px 20px;">
+    <div class="hero-content" style="text-align: center;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">{{ course_name }}</h1>
+        <p style="font-size: 1.1rem; color: var(--text-secondary);">Learn by doing - Write code, run it, and see results instantly!</p>
+    </div>
+</section>
+
+<!-- Interactive Learning Section -->
+<section style="padding: 2rem 0;">
+    <div class="container">
+        <div class="interactive-learning-container">
+            
+            <!-- Left Sidebar - Lessons -->
+            <div class="lesson-sidebar">
+                <h3 style="margin-top: 0; margin-bottom: 1rem; text-align: center;">📚 Lessons</h3>
+                <div class="lesson-item active" onclick="selectLesson(this, 1)" data-lesson="1">
+                    <span>✓ Lesson 1</span>
+                </div>
+                <div class="lesson-item" onclick="selectLesson(this, 2)" data-lesson="2">
+                    <span>→ Lesson 2</span>
+                </div>
+                <div class="lesson-item" onclick="selectLesson(this, 3)" data-lesson="3">
+                    <span>→ Lesson 3</span>
+                </div>
+                <div class="lesson-item" onclick="selectLesson(this, 4)" data-lesson="4">
+                    <span>→ Lesson 4</span>
+                </div>
+                <div class="lesson-item" onclick="selectLesson(this, 5)" data-lesson="5">
+                    <span>→ Lesson 5</span>
+                </div>
+                <div style="margin-top: 2rem; padding-top: 1rem; border-top: 2px solid var(--border); text-align: center;">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Progress</div>
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">20%</div>
+                </div>
+            </div>
+
+            <!-- Center - Code Editor -->
+            <div class="code-editor-wrapper">
+                <div class="editor-header">
+                    <select id="languageSelect" onchange="changeLanguage()" style="padding: 10px 16px; border: 2px solid var(--border); border-radius: 10px; background: var(--bg-primary); color: var(--text-primary); font-weight: 600; cursor: pointer;">
+                        <option value="python">🐍 Python</option>
+                        <option value="javascript">📜 JavaScript</option>
+                        <option value="java">☕ Java</option>
+                        <option value="cpp">⚙️ C++</option>
+                    </select>
+                    <button class="btn-control btn-run" onclick="runCode()">▶️ Run Code</button>
+                    <button class="btn-control btn-reset" onclick="resetCode()">🔄 Reset</button>
+                </div>
+
+                <div class="code-output-container">
+                    <!-- Code Editor -->
+                    <div class="editor-panel">
+                        <div class="panel-header">📝 Code Editor</div>
+                        <textarea id="codeEditor" class="editor-textarea" placeholder="Write your code here...">print("Hello, World!")
+print("Welcome to the challenge!")</textarea>
+                    </div>
+
+                    <!-- Output Console -->
+                    <div class="output-panel">
+                        <div class="panel-header">▶️ Output Console</div>
+                        <div id="output" class="output-display">Run your code to see the output...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar - Character Guide -->
+            <div class="character-guide">
+                <div class="character-avatar" id="characterAvatar">🐵</div>
+                <div class="character-message" id="characterMessage">
+                    👋 Hello! I'm your learning guide. Write some code and click RUN to see the magic happen!
+                </div>
+                <div class="controls">
+                    <button class="btn-control btn-run" onclick="showHint()">💡 Get Hint</button>
+                    <button class="btn-control btn-reset" onclick="toggleCharacter()">🎭 Character</button>
+                </div>
+                <div id="successMessage" style="display: none;" class="success-message">
+                    🎉 Excellent work! Your code ran perfectly!
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Code templates
+const codeTemplates = {
+    python: `# Challenge: Print a greeting message
+print("Hello, World!")
+print("Welcome to the challenge!")
+print("Let's learn Python together!")`,
+    javascript: `// Challenge: Print a greeting message
+console.log("Hello, World!");
+console.log("Welcome to the challenge!");
+console.log("Let's learn JavaScript together!");`,
+    java: `public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+        System.out.println("Welcome to the challenge!");
+        System.out.println("Let's learn Java together!");
+    }
+}`,
+    cpp: `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    cout << "Welcome to the challenge!" << endl;
+    cout << "Let's learn C++ together!" << endl;
+    return 0;
+}`
+};
+
+// Lesson content
+const lessons = [
+    {
+        title: "Getting Started",
+        hint: "Try printing your first message! Use the print() or console.log() function.",
+        character: "🐵",
+        messages: [
+            "Welcome to your first lesson!",
+            "Start simple - just print something!",
+            "Great job! Your code ran!",
+            "You're a natural programmer!"
+        ]
+    },
+    {
+        title: "Variables & Data Types",
+        hint: "Create a variable and assign it a value. Then print it!",
+        character: "🐒",
+        messages: [
+            "Now let's work with variables!",
+            "Store data and use it wisely!",
+            "Variables are containers for data!",
+            "Perfect! You've mastered variables!"
+        ]
+    },
+    {
+        title: "Loops & Iteration",
+        hint: "Use a for or while loop to repeat code. Try counting!",
+        character: "🦍",
+        messages: [
+            "Loops help you repeat code easily!",
+            "Want something done many times?",
+            "Loops are your best friend!",
+            "You're looping like a pro!"
+        ]
+    },
+    {
+        title: "Functions & Methods",
+        hint: "Create a function that does something cool!",
+        character: "🐵",
+        messages: [
+            "Functions make your code reusable!",
+            "Define, then call your function!",
+            "Functions are superpowers!",
+            "Excellent function skills!"
+        ]
+    },
+    {
+        title: "Challenge Project",
+        hint: "Combine everything you learned! Create something awesome!",
+        character: "🦁",
+        messages: [
+            "This is your final challenge!",
+            "Show me what you've learned!",
+            "You're doing amazing!",
+            "You are a coding champion! 🏆"
+        ]
+    }
+];
+
+let currentLesson = 0;
+let messageIndex = 0;
+let currentLanguage = 'python';
+
+function selectLesson(element, lessonNum) {
+    document.querySelectorAll('.lesson-item').forEach(item => item.classList.remove('active'));
+    element.classList.add('active');
+    currentLesson = lessonNum - 1;
+    messageIndex = 0;
+    updateCharacter();
+    document.getElementById('output').textContent = 'Run your code to see the output...';
+    document.getElementById('successMessage').style.display = 'none';
+}
+
+function updateCharacter() {
+    const lesson = lessons[currentLesson];
+    document.getElementById('characterAvatar').textContent = lesson.character;
+    document.getElementById('characterMessage').textContent = lesson.messages[Math.min(messageIndex, lesson.messages.length - 1)];
+}
+
+function changeLanguage() {
+    currentLanguage = document.getElementById('languageSelect').value;
+    resetCode();
+}
+
+function resetCode() {
+    document.getElementById('codeEditor').value = codeTemplates[currentLanguage];
+    document.getElementById('output').textContent = 'Run your code to see the output...';
+    document.getElementById('successMessage').style.display = 'none';
+    messageIndex = 0;
+    updateCharacter();
+}
+
+function runCode() {
+    const code = document.getElementById('codeEditor').value;
+    const output = document.getElementById('output');
+    
+    output.textContent = '⏳ Running code...';
+    messageIndex = Math.min(messageIndex + 1, lessons[currentLesson].messages.length - 1);
+    
+    setTimeout(() => {
+        // Simulate code execution
+        output.textContent = `✅ Code executed successfully!\n\n--- OUTPUT ---\nHello, World!\nWelcome to the challenge!\nLet's learn ${currentLanguage.toUpperCase()} together!\n\nNote: For actual execution, connect to JDoodle or Judge0 API`;
+        document.getElementById('successMessage').style.display = 'block';
+        updateCharacter();
+    }, 1500);
+}
+
+function showHint() {
+    const lesson = lessons[currentLesson];
+    alert(`💡 Hint: ${lesson.hint}`);
+}
+
+function toggleCharacter() {
+    const characters = ['🐵', '🐒', '🦍', '🦁', '🐳', '🦅', '🐙', '🦎'];
+    const currentChar = document.getElementById('characterAvatar').textContent;
+    const currentIndex = characters.indexOf(currentChar);
+    const nextIndex = (currentIndex + 1) % characters.length;
+    document.getElementById('characterAvatar').textContent = characters[nextIndex];
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('codeEditor').value = codeTemplates.python;
+    updateCharacter();
+});
+</script>
+
+{% endblock %}

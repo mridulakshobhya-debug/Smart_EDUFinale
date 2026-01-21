@@ -1,0 +1,453 @@
+{% extends "base_enhanced.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(124, 58, 237, 0.1)); padding: 60px 20px; border-bottom: 1px solid var(--border);">
+    <div class="hero-content" style="text-align: center;">
+        <h1 style="animation: slideInDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Outfit', sans-serif; font-size: 3rem; margin-bottom: 1rem;">🚀 Code Learning Platform</h1>
+        <p style="animation: slideInUp 0.8s ease 0.2s both; font-family: 'Inter', sans-serif; font-size: 1.2rem; color: var(--text-secondary);">Write code. Learn faster. Master programming with interactive challenges inspired by CodeMonkey.</p>
+    </div>
+</section>
+
+<!-- Main Code Editor Section -->
+<section style="padding: 3rem 0; background: var(--bg-primary);">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+            <!-- Left: Course/Challenge Navigation -->
+            <div style="background: var(--bg-secondary); border-radius: 16px; padding: 2rem; border: 1px solid var(--border);">
+                <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    📚 Learning Paths
+                </h3>
+                <div id="coursesNav" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Courses will be populated here -->
+                </div>
+            </div>
+
+            <!-- Right: Code Editor & Output -->
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Language Selector -->
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <select id="languageSelect" onchange="changeLanguage()" style="padding: 12px 16px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); cursor: pointer; font-weight: 600;">
+                        <option value="python">🐍 Python</option>
+                        <option value="javascript">📜 JavaScript</option>
+                        <option value="java">☕ Java</option>
+                        <option value="cpp">⚙️ C++</option>
+                        <option value="csharp">🎯 C#</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="runCode()" style="gap: 0.5rem;">
+                        ▶️ Run Code
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetCode()" style="gap: 0.5rem;">
+                        🔄 Reset
+                    </button>
+                </div>
+
+                <!-- Editor & Output Container -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: 600px;">
+                    <!-- Code Editor -->
+                    <div style="background: var(--bg-secondary); border-radius: 12px; border: 2px solid var(--border); overflow: hidden; display: flex; flex-direction: column;">
+                        <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 1rem; font-weight: 600; font-size: 0.95rem;">
+                            📝 Code Editor
+                        </div>
+                        <textarea id="codeEditor" placeholder="Write your code here..." style="flex: 1; padding: 1rem; background: var(--bg-primary); color: var(--text-primary); border: none; font-family: 'Courier New', monospace; font-size: 0.95rem; resize: none; outline: none;">// Start coding here!
+print("Hello, World!")
+</textarea>
+                    </div>
+
+                    <!-- Output Console -->
+                    <div style="background: var(--bg-secondary); border-radius: 12px; border: 2px solid var(--border); overflow: hidden; display: flex; flex-direction: column;">
+                        <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 1rem; font-weight: 600; font-size: 0.95rem;">
+                            ▶️ Output Console
+                        </div>
+                        <div id="output" style="flex: 1; padding: 1rem; background: var(--bg-primary); color: var(--text-primary); overflow-y: auto; font-family: 'Courier New', monospace; font-size: 0.9rem; white-space: pre-wrap; word-break: break-all;">
+                            Output will appear here...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenges Grid Section -->
+        <div style="margin-top: 4rem;">
+            <h2 style="font-size: 2.2rem; margin-bottom: 2rem; text-align: center;">🎯 Coding Challenges</h2>
+            <div id="challengesContainer" class="grid grid-3"></div>
+        </div>
+    </div>
+</section>
+
+<style>
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.challenge-card {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.challenge-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.challenge-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+    border-color: var(--primary);
+}
+
+.challenge-difficulty {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.difficulty-easy {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+}
+
+.difficulty-medium {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+}
+
+.difficulty-hard {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.course-nav-item {
+    background: var(--bg-primary);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 600;
+}
+
+.course-nav-item:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.course-nav-item.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+@media (max-width: 1024px) {
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+// Code templates for different languages
+const codeTemplates = {
+    python: `# Python Example
+print("Hello, World!")
+
+# Variables
+name = "Coder"
+age = 25
+
+# Loop
+for i in range(1, 6):
+    print(f"Number: {i}")
+
+# Function
+def add(a, b):
+    return a + b
+
+result = add(5, 3)
+print(f"Sum: {result}")
+`,
+    javascript: `// JavaScript Example
+console.log("Hello, World!");
+
+// Variables
+let name = "Coder";
+let age = 25;
+
+// Loop
+for (let i = 1; i <= 5; i++) {
+    console.log("Number: " + i);
+}
+
+// Function
+function add(a, b) {
+    return a + b;
+}
+
+let result = add(5, 3);
+console.log("Sum: " + result);
+`,
+    java: `// Java Example
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+        
+        // Variables
+        String name = "Coder";
+        int age = 25;
+        
+        // Loop
+        for (int i = 1; i <= 5; i++) {
+            System.out.println("Number: " + i);
+        }
+        
+        // Method
+        int result = add(5, 3);
+        System.out.println("Sum: " + result);
+    }
+    
+    static int add(int a, int b) {
+        return a + b;
+    }
+}
+`,
+    cpp: `// C++ Example
+#include <iostream>
+using namespace std;
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    cout << "Hello, World!" << endl;
+    
+    // Variables
+    string name = "Coder";
+    int age = 25;
+    
+    // Loop
+    for (int i = 1; i <= 5; i++) {
+        cout << "Number: " << i << endl;
+    }
+    
+    // Function
+    int result = add(5, 3);
+    cout << "Sum: " << result << endl;
+    
+    return 0;
+}
+`,
+    csharp: `// C# Example
+using System;
+
+class Program {
+    static int Add(int a, int b) {
+        return a + b;
+    }
+    
+    static void Main() {
+        Console.WriteLine("Hello, World!");
+        
+        // Variables
+        string name = "Coder";
+        int age = 25;
+        
+        // Loop
+        for (int i = 1; i <= 5; i++) {
+            Console.WriteLine("Number: " + i);
+        }
+        
+        // Method
+        int result = Add(5, 3);
+        Console.WriteLine("Sum: " + result);
+    }
+}
+`
+};
+
+// Challenges data (inspired by CodeMonkey)
+const challengesData = [
+    {
+        id: 1,
+        title: "Hello World",
+        description: "Write your first program to print 'Hello, World!'",
+        difficulty: "easy",
+        emoji: "👋",
+        language: "python"
+    },
+    {
+        id: 2,
+        title: "Sum Calculator",
+        description: "Create a function that adds two numbers and returns the sum",
+        difficulty: "easy",
+        emoji: "🧮",
+        language: "python"
+    },
+    {
+        id: 3,
+        title: "Loop Counter",
+        description: "Use a loop to print numbers from 1 to 10",
+        difficulty: "easy",
+        emoji: "🔄",
+        language: "python"
+    },
+    {
+        id: 4,
+        title: "String Manipulation",
+        description: "Reverse a string and print it backwards",
+        difficulty: "medium",
+        emoji: "📝",
+        language: "python"
+    },
+    {
+        id: 5,
+        title: "Array Filter",
+        description: "Filter an array to keep only even numbers",
+        difficulty: "medium",
+        emoji: "🎯",
+        language: "javascript"
+    },
+    {
+        id: 6,
+        title: "Fibonacci Sequence",
+        description: "Generate the first 10 numbers of the Fibonacci sequence",
+        difficulty: "hard",
+        emoji: "📊",
+        language: "python"
+    }
+];
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initializeEditor();
+    renderChallenges();
+    renderCoursesNav();
+});
+
+function initializeEditor() {
+    const editor = document.getElementById('codeEditor');
+    editor.value = codeTemplates.python;
+}
+
+function renderCoursesNav() {
+    const nav = document.getElementById('coursesNav');
+    const languages = ['python', 'javascript', 'java', 'cpp', 'csharp'];
+    const languageNames = {
+        python: '🐍 Python',
+        javascript: '📜 JavaScript',
+        java: '☕ Java',
+        cpp: '⚙️ C++',
+        csharp: '🎯 C#'
+    };
+    
+    languages.forEach(lang => {
+        const button = document.createElement('div');
+        button.className = 'course-nav-item';
+        button.textContent = languageNames[lang];
+        button.onclick = () => selectLanguage(lang);
+        if (lang === 'python') button.classList.add('active');
+        nav.appendChild(button);
+    });
+}
+
+function selectLanguage(lang) {
+    document.querySelectorAll('.course-nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    document.getElementById('languageSelect').value = lang;
+    changeLanguage();
+}
+
+function changeLanguage() {
+    const language = document.getElementById('languageSelect').value;
+    const editor = document.getElementById('codeEditor');
+    editor.value = codeTemplates[language];
+    document.getElementById('output').textContent = 'Output will appear here...';
+}
+
+function renderChallenges() {
+    const container = document.getElementById('challengesContainer');
+    container.innerHTML = '';
+    
+    challengesData.forEach(challenge => {
+        const card = document.createElement('div');
+        card.className = 'challenge-card';
+        card.innerHTML = `
+            <div class="challenge-difficulty difficulty-${challenge.difficulty}">
+                ${challenge.difficulty.toUpperCase()}
+            </div>
+            <h3 style="font-size: 1.3rem; margin: 0.5rem 0; display: flex; gap: 0.5rem; align-items: center;">
+                <span>${challenge.emoji}</span>
+                ${challenge.title}
+            </h3>
+            <p style="color: var(--text-secondary); margin: 1rem 0; font-size: 0.95rem;">
+                ${challenge.description}
+            </p>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-primary" onclick="loadChallenge(${challenge.id})" style="flex: 1;">
+                    Try Challenge
+                </button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function loadChallenge(id) {
+    const challenge = challengesData.find(c => c.id === id);
+    if (challenge) {
+        document.getElementById('languageSelect').value = challenge.language;
+        changeLanguage();
+        document.getElementById('output').innerHTML = `<span style="color: var(--primary); font-weight: 600;">📌 Challenge: ${challenge.title}</span><br><span style="color: var(--text-secondary);">${challenge.description}</span>`;
+    }
+}
+
+function runCode() {
+    const code = document.getElementById('codeEditor').value;
+    const language = document.getElementById('languageSelect').value;
+    const output = document.getElementById('output');
+    
+    // Show loading state
+    output.textContent = '⏳ Running code...';
+    
+    // Simple client-side simulation for demonstration
+    setTimeout(() => {
+        if (language === 'python' || language === 'javascript') {
+            // For demo, we'll just show a success message
+            output.textContent = `✅ Code executed successfully!\n\nNote: This is a demonstration interface.\nFor actual code execution, integrate with a backend API (e.g., JDoodle, RapidAPI, AWS Lambda).\n\n--- Output ---\nHello, World!\nNumber: 1\nNumber: 2\nNumber: 3\nNumber: 4\nNumber: 5\nSum: 8`;
+        } else {
+            output.textContent = `✅ Code compiled and executed!\n\nTo run actual code, you would need a backend service.\nConsider using:\n- JDoodle API\n- Judge0 API\n- AWS Lambda\n- Custom Docker containers`;
+        }
+    }, 1000);
+}
+
+function resetCode() {
+    const language = document.getElementById('languageSelect').value;
+    document.getElementById('codeEditor').value = codeTemplates[language];
+    document.getElementById('output').textContent = 'Output will appear here...';
+}
+</script>
+
+{% endblock %}

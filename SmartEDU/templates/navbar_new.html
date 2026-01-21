@@ -1,0 +1,438 @@
+<!-- Premium Navigation Bar (Codecademy Style) -->
+<nav class="premium-navbar">
+    <div class="navbar-container">
+        <!-- Logo & Branding -->
+        <div class="navbar-brand">
+            <a href="{{ url_for('main.index') }}" class="logo-link">
+                <span class="logo-icon">🎓</span>
+                <span class="logo-text">SmartEdu</span>
+            </a>
+        </div>
+
+        <!-- Navigation Menu -->
+        <div class="navbar-menu">
+            <div class="nav-items-left">
+                <a href="{{ url_for('main.index') }}" class="nav-link">Home</a>
+                <div class="nav-dropdown">
+                    <button class="nav-link dropdown-toggle">Catalog ▼</button>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('elearning.index') }}" class="dropdown-item">
+                            <span class="item-icon">💻</span>
+                            <div>
+                                <div class="item-title">Courses</div>
+                                <div class="item-desc">Master in-demand skills</div>
+                            </div>
+                        </a>
+                        <a href="{{ url_for('elibrary.index') }}" class="dropdown-item">
+                            <span class="item-icon">📚</span>
+                            <div>
+                                <div class="item-title">Library</div>
+                                <div class="item-desc">Explore books & resources</div>
+                            </div>
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">🏆</span>
+                            <div>
+                                <div class="item-title">Certifications</div>
+                                <div class="item-desc">Get industry recognized certs</div>
+                            </div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">🎓</span>
+                            <div>
+                                <div class="item-title">Career Paths</div>
+                                <div class="item-desc">Structured learning paths</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <button class="nav-link dropdown-toggle">Resources ▼</button>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">📝</span>
+                            <div>
+                                <div class="item-title">Blog</div>
+                                <div class="item-desc">Latest insights & tips</div>
+                            </div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">📖</span>
+                            <div>
+                                <div class="item-title">Cheatsheets</div>
+                                <div class="item-desc">Quick reference guides</div>
+                            </div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">💡</span>
+                            <div>
+                                <div class="item-title">Projects</div>
+                                <div class="item-desc">Build real projects</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <button class="nav-link dropdown-toggle">Plans ▼</button>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">👤</span>
+                            <div>
+                                <div class="item-title">Individual</div>
+                                <div class="item-desc">Personal learning</div>
+                            </div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">👥</span>
+                            <div>
+                                <div class="item-title">Teams</div>
+                                <div class="item-desc">For businesses</div>
+                            </div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">🏫</span>
+                            <div>
+                                <div class="item-title">Enterprise</div>
+                                <div class="item-desc">Custom solutions</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side Items -->
+        <div class="nav-items-right">
+            <a href="#" class="nav-link search-btn" title="Search">🔍</a>
+            
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.ai') }}" class="nav-link ai-btn" title="AI Assistant">🤖 AI</a>
+                <div class="nav-dropdown user-dropdown">
+                    <button class="nav-link user-btn dropdown-toggle">
+                        👤 {{ current_user.full_name or current_user.username }}
+                    </button>
+                    <div class="dropdown-menu dropdown-end">
+                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+                            <span class="item-icon">👤</span>
+                            <div class="item-title">My Profile</div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">🎯</span>
+                            <div class="item-title">My Learning</div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">⭐</span>
+                            <div class="item-title">Achievements</div>
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a href="#" class="dropdown-item">
+                            <span class="item-icon">⚙️</span>
+                            <div class="item-title">Settings</div>
+                        </a>
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout-item">
+                            <span class="item-icon">🚪</span>
+                            <div class="item-title">Logout</div>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}" class="nav-link">Log In</a>
+                <a href="{{ url_for('auth.signup') }}" class="nav-link btn btn-primary-navbar">Sign Up</a>
+            {% endif %}
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</nav>
+
+<style>
+/* Premium Navigation Styles */
+.premium-navbar {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(255, 255, 255, 0.97));
+    backdrop-filter: blur(30px) saturate(200%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    gap: 30px;
+}
+
+.navbar-brand {
+    flex-shrink: 0;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: transform 0.3s ease;
+}
+
+.logo-link:hover {
+    transform: scale(1.05);
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+    display: inline-block;
+}
+
+.navbar-menu {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.nav-items-left {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-link {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #333;
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+}
+
+.dropdown-toggle {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    min-width: 300px;
+    padding: 10px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    margin-top: 8px;
+    z-index: 200;
+}
+
+.nav-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.dropdown-item:hover {
+    background: rgba(102, 126, 234, 0.08);
+    border-left-color: #667eea;
+    padding-left: 20px;
+}
+
+.item-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.item-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.item-desc {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 2px;
+}
+
+.dropdown-divider {
+    margin: 8px 0;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.nav-items-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.search-btn {
+    padding: 8px 12px;
+    font-size: 1.1rem;
+}
+
+.ai-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+.user-btn {
+    padding: 8px 12px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 20px;
+}
+
+.user-btn:hover {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+.dropdown-end {
+    left: auto;
+    right: 0;
+}
+
+.logout-item {
+    color: #ef4444;
+    border-left-color: transparent;
+}
+
+.logout-item:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-left-color: #ef4444;
+}
+
+.btn-primary-navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+}
+
+.btn-primary-navbar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    gap: 6px;
+}
+
+.mobile-menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .navbar-container {
+        gap: 15px;
+        height: 60px;
+    }
+
+    .nav-items-left {
+        gap: 0;
+    }
+
+    .nav-link {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .premium-navbar {
+        position: relative;
+    }
+
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .navbar-menu,
+    .nav-items-right {
+        display: none;
+    }
+
+    .navbar-container {
+        padding: 0 15px;
+        gap: 10px;
+    }
+}
+</style>
+
+<script>
+function toggleMobileMenu() {
+    console.log('Mobile menu toggled');
+}
+
+// Close dropdowns on click outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.style.opacity = '0';
+            menu.style.visibility = 'hidden';
+            menu.style.transform = 'translateY(10px)';
+        });
+    }
+});
+</script>

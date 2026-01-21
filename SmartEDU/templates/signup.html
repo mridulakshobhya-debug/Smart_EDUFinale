@@ -1,0 +1,496 @@
+{% extends "base_enhanced.html" %}
+
+{% block content %}
+<style>
+    .auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .auth-page::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    .auth-page::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -5%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(118, 75, 162, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 25s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(20px); }
+    }
+
+    .auth-container {
+        width: 100%;
+        max-width: 500px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .auth-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 50px 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .auth-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin: 0 0 8px 0;
+        text-align: center;
+    }
+
+    .auth-subtitle {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        text-align: center;
+        margin: 0 0 32px 0;
+    }
+
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .auth-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .auth-form-group label {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+
+    .auth-form-group input,
+    .auth-form-group select {
+        padding: 14px 16px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    .auth-form-group input:focus,
+    .auth-form-group select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .auth-form-group input::placeholder {
+        color: var(--text-tertiary);
+    }
+
+    .picture-selection {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 12px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        padding: 15px;
+        background: var(--bg-primary);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+    }
+
+    .picture-option {
+        text-align: center;
+        cursor: pointer;
+        padding: 10px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: var(--bg-secondary);
+    }
+
+    .picture-option:hover {
+        border-color: var(--primary);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(102, 126, 234, 0.15);
+    }
+
+    .picture-option input[type="radio"] {
+        display: none;
+    }
+
+    .picture-option input[type="radio"]:checked + .picture-display {
+        border-color: var(--primary);
+        box-shadow: 0 0 16px rgba(102, 126, 234, 0.6);
+        transform: scale(1.08);
+    }
+
+    .picture-display {
+        width: 70px;
+        height: 70px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 8px;
+        border: 2px solid var(--border);
+        transition: all 0.3s ease;
+    }
+
+    .auth-checkbox-group {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-top: 8px;
+    }
+
+    .auth-checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--primary);
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+    .auth-checkbox-group label {
+        cursor: pointer;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .auth-submit {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 14px 24px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        margin-top: 8px;
+    }
+
+    .auth-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .auth-divider {
+        text-align: center;
+        color: var(--text-tertiary);
+        margin: 28px 0;
+        font-size: 0.95rem;
+    }
+
+    .auth-links {
+        text-align: center;
+        padding: 0 0 24px;
+    }
+
+    .auth-links a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .auth-links a:hover {
+        color: var(--secondary);
+        text-decoration: underline;
+    }
+
+    .auth-footer {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-tertiary);
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+    }
+
+    .auth-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .auth-footer a:hover {
+        color: var(--secondary);
+        text-decoration: underline;
+    }
+
+    .auth-theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .auth-theme-toggle:hover {
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    @media (max-width: 480px) {
+        .auth-card {
+            padding: 40px 24px;
+        }
+
+        .auth-title {
+            font-size: 1.75rem;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<section class="auth-page">
+    <button class="auth-theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+    </button>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Join SmartEdu</h1>
+            <p class="auth-subtitle">Create your account and start learning today</p>
+
+            <form method="POST" class="auth-form">
+                <div class="form-row">
+                    <div class="auth-form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name" required placeholder="John">
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" required placeholder="Doe">
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="your_username">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="password2">Confirm Password</label>
+                    <input type="password" id="password2" name="password2" required placeholder="••••••••">
+                </div>
+
+                <div class="auth-form-group">
+                    <label>Choose Your Avatar</label>
+                    <div class="picture-selection">
+        font-size: 0.95em;
+    }
+</style>
+
+<section class="auth-page">
+    <button class="auth-theme-toggle" aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+    </button>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Create Your Account</h1>
+            <p class="auth-subtitle">Join 2M+ learners on SmartEdu Pro</p>
+
+            <form method="POST" class="auth-form">
+                <div class="auth-form-group">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" required placeholder="John Doe">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="johndoe">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                    <p class="auth-form-hint">At least 6 characters</p>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required placeholder="••••••••">
+                </div>
+
+                <!-- Onboarding Questions Section -->
+                <div class="onboarding-section">
+                    <h3>🎯 Tell Us About Yourself</h3>
+                    
+                    <div class="auth-form-group">
+                        <label for="learning_goal">What's Your Learning Goal?</label>
+                        <input type="text" id="learning_goal" name="learning_goal" placeholder="e.g., Learn Web Development" required>
+                    </div>
+
+                    <div class="auth-form-group">
+                        <label for="heard_from">Where Did You Hear About SmartEdu?</label>
+                        <select id="heard_from" name="heard_from" required>
+                            <option value="">-- Select an option --</option>
+                            <option value="Social Media">Social Media</option>
+                            <option value="Search Engine">Search Engine</option>
+                            <option value="Friend/Family">Friend/Family</option>
+                            <option value="Advertisement">Advertisement</option>
+                            <option value="School/University">School/University</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Profile Picture Selection -->
+                <div class="onboarding-section">
+                    <h3>📸 Choose Your Profile Picture</h3>
+                    <div class="picture-selection">
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_1.png" checked required>
+                            <div class="picture-display">😊</div>
+                            <small>Smile</small>
+                        </label>
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_2.png">
+                            <div class="picture-display">🤓</div>
+                            <small>Smart</small>
+                        </label>
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_3.png">
+                            <div class="picture-display">🚀</div>
+                            <small>Rocket</small>
+                        </label>
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_4.png">
+                            <div class="picture-display">⭐</div>
+                            <small>Star</small>
+                        </label>
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_5.png">
+                            <div class="picture-display">🎓</div>
+                            <small>Graduate</small>
+                        </label>
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_6.png">
+                            <div class="picture-display">🏆</div>
+                            <small>Champion</small>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="auth-checkbox-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to the <a href="#" style="color: var(--primary); text-decoration: none;">Terms of Service</a> and <a href="#" style="color: var(--primary); text-decoration: none;">Privacy Policy</a></label>
+                </div>
+
+                <button type="submit" class="btn auth-submit"><span>Create My Account</span></button>
+            </form>
+
+            <div class="auth-divider">Already have an account?</div>
+
+            <div class="auth-links">
+                <a href="{{ url_for('auth.login') }}">Sign in here →</a>
+            </div>
+
+            <div class="auth-footer">
+                By creating an account, you accept our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function toggleTheme() {
+    const root = document.documentElement;
+    const currentTheme = root.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    root.setAttribute('data-theme', newTheme);
+    localStorage.setItem('smartedu-theme', newTheme);
+    
+    // Show notification
+    const message = newTheme === 'dark' ? '🌙 Dark Mode Enabled' : '☀️ Light Mode Enabled';
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: var(--primary);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 9999;
+        font-weight: 600;
+        animation: slideInUp 0.3s ease-out;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 2000);
+}
+
+// Initialize theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('smartedu-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});
+</script>

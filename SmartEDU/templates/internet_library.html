@@ -1,0 +1,161 @@
+{% extends "base_enhanced.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>📚 Infinite Digital Library</h1>
+        <p>Search and read millions of books from across the internet - completely free</p>
+        <div class="hero-cta" style="max-width: 600px; margin: 2rem auto 0;">
+            <form method="GET" action="{{ url_for('elibrary.search_book') }}" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <input type="text" name="q" placeholder="🔍 Search any book, author, or topic..." style="border-radius: 2rem; padding: 1rem 1.5rem; flex: 1; min-width: 200px; border: 2px solid white; background: rgba(255,255,255,0.1); color: white; font-size: 1rem;" required>
+                <button type="submit" class="btn btn-primary"><span>🔍 Search</span></button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Search Info -->
+<section>
+    <div class="container">
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 2rem;">
+            <h2 style="margin-top: 0; color: white;">✨ How it works</h2>
+            <p>Our AI-powered search finds books from the entire internet including Project Gutenberg, Internet Archive, Google Books, Standard Ebooks, Open Library, and more!</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                <div>
+                    <h3 style="font-size: 1.5rem;">⚡ Fast</h3>
+                    <p>Results in seconds</p>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.5rem;">🌐</h3>
+                    <p>Millions of books</p>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.5rem;">💯</h3>
+                    <p>100% Free</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Popular Books -->
+<section>
+    <div class="container">
+        <div class="section-title">
+            <h2>🌟 Popular Books</h2>
+            <p>Start reading these classics and bestsellers</p>
+        </div>
+        <div class="grid grid-4">
+            {% for book in books[:8] %}
+            <div class="card book-card">
+                <div class="book-header">📕</div>
+                <div class="book-body">
+                    <h3>{{ book.title }}</h3>
+                    <div class="course-meta">
+                        <span>✍️ {{ book.author }}</span>
+                        <span class="badge badge-primary">{{ book.category }}</span>
+                    </div>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Click to find and read online</p>
+                    <div class="course-footer">
+                        <a href="{{ url_for('elibrary.read_online', book_title=book.title|urlencode, book_author=book.author|urlencode) }}" 
+                           class="btn btn-primary" 
+                           style="flex: 1; text-align: center; text-decoration: none;"
+                           target="_blank">
+                            <span>📖 Read Now</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- All Available Books -->
+<section>
+    <div class="container">
+        <div class="section-title">
+            <h2>📚 All Available Books</h2>
+            <p>Browse our complete collection</p>
+        </div>
+        <div class="grid grid-3">
+            {% for book in books %}
+            <div class="card book-card">
+                <div class="book-header">
+                    {% if loop.index % 3 == 0 %}
+                    📙
+                    {% elif loop.index % 3 == 1 %}
+                    📕
+                    {% else %}
+                    📗
+                    {% endif %}
+                </div>
+                <div class="book-body">
+                    <h3>{{ book.title }}</h3>
+                    <div class="course-meta">
+                        <span>✍️ {{ book.author }}</span>
+                        <span class="badge badge-primary">{{ book.category }}</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-tertiary); margin-bottom: 1rem;">Free online reading available</p>
+                    <div class="course-footer">
+                        <a href="{{ url_for('elibrary.read_online', book_title=book.title|urlencode, book_author=book.author|urlencode) }}" 
+                           class="btn btn-primary" 
+                           style="flex: 1; text-align: center; text-decoration: none;"
+                           target="_blank">
+                            <span>📖 Read Now</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Sources Info -->
+<section>
+    <div class="container">
+        <div class="card" style="padding: 2rem;">
+            <h2>🌍 Trusted Sources</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">We search across these platforms to find books for you:</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                    <p style="font-weight: 600; margin: 0;">📚 Project Gutenberg</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">70,000+ free ebooks</p>
+                </div>
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                    <p style="font-weight: 600; margin: 0;">🏛️ Internet Archive</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">Millions of books</p>
+                </div>
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                    <p style="font-weight: 600; margin: 0;">📖 Google Books</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">Preview & purchase</p>
+                </div>
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                    <p style="font-weight: 600; margin: 0;">✨ Standard Ebooks</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">High quality classics</p>
+                </div>
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                    <p style="font-weight: 600; margin: 0;">🔖 Open Library</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">Books worldwide</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+{% endblock %}

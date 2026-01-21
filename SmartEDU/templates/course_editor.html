@@ -1,0 +1,660 @@
+{% extends "base_enhanced.html" %}
+
+{% block content %}
+<style>
+    /* Professional Course Editor Layout */
+    .course-editor-container {
+        display: flex;
+        height: calc(100vh - 80px);
+        gap: 0;
+        background: var(--bg-primary);
+        overflow: hidden;
+    }
+
+    /* Left Sidebar - Course Content */
+    .course-sidebar {
+        width: 320px;
+        background: var(--bg-secondary);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        padding: 20px;
+        flex-shrink: 0;
+    }
+
+    .course-sidebar h3 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.3rem;
+        margin: 0 0 20px 0;
+        color: var(--text-primary);
+    }
+
+    .lesson-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .lesson-item {
+        padding: 14px 16px;
+        background: var(--bg-primary);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--text-secondary);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .lesson-item:hover {
+        border-color: var(--primary);
+        background: var(--bg-hover);
+        color: var(--text-primary);
+        transform: translateX(4px);
+    }
+
+    .lesson-item.active {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .lesson-item .icon {
+        font-size: 1.2rem;
+    }
+
+    .lesson-item .check {
+        margin-left: auto;
+        font-size: 1.1rem;
+    }
+
+    /* Main Content Area */
+    .course-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-primary);
+    }
+
+    /* Instructions Panel */
+    .instructions-panel {
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border);
+        padding: 30px;
+        overflow-y: auto;
+        max-height: 35%;
+        flex-shrink: 0;
+    }
+
+    .instructions-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .instructions-header h2 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.8rem;
+        margin: 0;
+        color: var(--text-primary);
+    }
+
+    .level-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .instructions-content {
+        color: var(--text-secondary);
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    .instructions-content p {
+        margin: 0 0 15px 0;
+    }
+
+    .instructions-content code {
+        background: var(--bg-primary);
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-family: 'Courier New', monospace;
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .code-block {
+        background: var(--bg-primary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 15px;
+        margin: 15px 0;
+        overflow-x: auto;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+    }
+
+    /* Code Editor Panel */
+    .editor-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #1e1e1e;
+        border-right: 1px solid var(--border);
+    }
+
+    .editor-tabs {
+        display: flex;
+        gap: 0;
+        background: #252526;
+        border-bottom: 1px solid #3e3e42;
+        padding: 0;
+    }
+
+    .editor-tab {
+        padding: 12px 16px;
+        cursor: pointer;
+        border: none;
+        background: #252526;
+        color: #858585;
+        font-weight: 500;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .editor-tab:hover {
+        background: #2d2d30;
+    }
+
+    .editor-tab.active {
+        color: #fff;
+        border-bottom-color: #667eea;
+        background: #1e1e1e;
+    }
+
+    .editor-content {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .code-editor {
+        width: 100%;
+        height: 100%;
+        font-family: 'Courier New', monospace;
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 15px;
+        border: none;
+        resize: none;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .line-numbers {
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: #1e1e1e;
+        color: #858585;
+        padding: 15px 10px;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        border-right: 1px solid #3e3e42;
+        user-select: none;
+        text-align: right;
+        width: 50px;
+    }
+
+    .code-editor {
+        margin-left: 50px;
+    }
+
+    /* Output Panel */
+    .output-panel {
+        background: #1e1e1e;
+        border-top: 1px solid #3e3e42;
+        padding: 20px;
+        max-height: 35%;
+        overflow-y: auto;
+        color: #d4d4d4;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+    }
+
+    .output-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #3e3e42;
+    }
+
+    .output-header h4 {
+        margin: 0;
+        color: #d4d4d4;
+        font-size: 1rem;
+    }
+
+    .output-content {
+        background: #252526;
+        border-radius: 6px;
+        padding: 12px;
+        min-height: 60px;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .output-line {
+        margin: 4px 0;
+    }
+
+    .output-success {
+        color: #4ec9b0;
+    }
+
+    .output-error {
+        color: #f48771;
+    }
+
+    .output-log {
+        color: #9cdcfe;
+    }
+
+    /* Right Sidebar - Controls */
+    .course-controls {
+        width: 300px;
+        background: var(--bg-secondary);
+        border-left: 1px solid var(--border);
+        padding: 20px;
+        overflow-y: auto;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .control-section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .control-label {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 1rem;
+    }
+
+    .run-button {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: 'Outfit', sans-serif;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .run-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    }
+
+    .reset-button {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        border: 2px solid var(--border);
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .reset-button:hover {
+        border-color: var(--primary);
+        background: var(--bg-hover);
+    }
+
+    .success-indicator {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+        border: 2px solid #10b981;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        color: #10b981;
+        font-weight: 600;
+    }
+
+    .hints-section {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        border-left: 4px solid var(--primary);
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .hints-section h4 {
+        margin: 0 0 10px 0;
+        color: var(--primary);
+        font-size: 0.95rem;
+    }
+
+    .hints-section p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: var(--border);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        width: 65%;
+        transition: width 0.3s ease;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-tertiary);
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .course-sidebar, .course-controls {
+            width: 250px;
+            padding: 15px;
+        }
+
+        .instructions-panel {
+            max-height: 30%;
+            padding: 20px;
+        }
+
+        .output-panel {
+            max-height: 30%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .course-editor-container {
+            flex-direction: column;
+        }
+
+        .course-sidebar, .course-controls {
+            width: 100%;
+            max-height: 150px;
+        }
+
+        .instructions-panel {
+            max-height: 200px;
+            padding: 15px;
+        }
+
+        .editor-panel {
+            height: 300px;
+        }
+
+        .output-panel {
+            max-height: 200px;
+        }
+    }
+</style>
+
+<div class="course-editor-container">
+    <!-- Left Sidebar - Lessons -->
+    <div class="course-sidebar">
+        <h3>📚 Course Lessons</h3>
+        <div class="lesson-list">
+            <div class="lesson-item active" onclick="selectLesson(this)">
+                <span class="icon">1️⃣</span>
+                <span>Getting Started</span>
+                <span class="check">✓</span>
+            </div>
+            <div class="lesson-item" onclick="selectLesson(this)">
+                <span class="icon">2️⃣</span>
+                <span>Variables & Types</span>
+            </div>
+            <div class="lesson-item" onclick="selectLesson(this)">
+                <span class="icon">3️⃣</span>
+                <span>Functions & Methods</span>
+            </div>
+            <div class="lesson-item" onclick="selectLesson(this)">
+                <span class="icon">4️⃣</span>
+                <span>Control Flow</span>
+            </div>
+            <div class="lesson-item" onclick="selectLesson(this)">
+                <span class="icon">5️⃣</span>
+                <span>Arrays & Objects</span>
+            </div>
+            <div class="lesson-item" onclick="selectLesson(this)">
+                <span class="icon">🎯</span>
+                <span>Final Project</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="course-main">
+        <!-- Instructions -->
+        <div class="instructions-panel">
+            <div class="instructions-header">
+                <h2>Getting Started with Python</h2>
+                <span class="level-badge">Beginner</span>
+            </div>
+            <div class="instructions-content">
+                <p>Welcome to your first Python lesson! In this module, you'll learn the fundamentals of Python programming.</p>
+                <p><strong>Task:</strong> Write a program that prints your name and age.</p>
+                <div class="code-block">
+# Example Output:
+# "Hello! My name is John and I am 25 years old."
+                </div>
+                <p><strong>Hint:</strong> Use the <code>print()</code> function to output text. You can combine strings using the <code>+</code> operator.</p>
+            </div>
+        </div>
+
+        <!-- Code Editor -->
+        <div class="editor-panel">
+            <div class="editor-tabs">
+                <button class="editor-tab active">📄 main.py</button>
+                <button class="editor-tab">📚 Solution</button>
+                <button class="editor-tab">📖 Docs</button>
+            </div>
+            <div class="editor-content">
+                <div class="line-numbers" id="lineNumbers"></div>
+                <textarea class="code-editor" id="codeEditor" placeholder="# Write your Python code here..."># Print your name and age
+name = "John"
+age = 25
+print("Hello! My name is " + name + " and I am " + str(age) + " years old.")</textarea>
+            </div>
+        </div>
+
+        <!-- Output -->
+        <div class="output-panel">
+            <div class="output-header">
+                <h4>🖥️ Output Console</h4>
+            </div>
+            <div class="output-content" id="outputConsole">
+                <div class="output-line output-log">Ready to run your code...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Sidebar - Controls -->
+    <div class="course-controls">
+        <div class="control-section">
+            <button class="run-button" onclick="runCode()">▶️ Run Code</button>
+            <button class="reset-button" onclick="resetCode()">↻ Reset</button>
+        </div>
+
+        <div class="control-section">
+            <div class="control-label">Progress</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <p style="margin: 0; font-size: 0.85rem; color: var(--text-tertiary);">1 of 6 lessons completed</p>
+        </div>
+
+        <div class="hints-section">
+            <h4>💡 Tips</h4>
+            <p>• Use <code>print()</code> to display output<br>• Combine strings with +<br>• Convert numbers to strings with <code>str()</code></p>
+        </div>
+
+        <div class="success-indicator" id="successIndicator" style="display: none;">
+            ✅ Great job! You passed this lesson!
+        </div>
+
+        <div class="control-section">
+            <button style="background: var(--bg-primary); color: var(--text-primary); border: 2px solid var(--primary); padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600;" onclick="completeLesson()">Next Lesson →</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Update line numbers
+    function updateLineNumbers() {
+        const editor = document.getElementById('codeEditor');
+        const lineNumbers = document.getElementById('lineNumbers');
+        const lines = editor.value.split('\n').length;
+        let html = '';
+        for (let i = 1; i <= lines; i++) {
+            html += i + '<br>';
+        }
+        lineNumbers.innerHTML = html;
+    }
+
+    document.getElementById('codeEditor').addEventListener('input', updateLineNumbers);
+    document.getElementById('codeEditor').addEventListener('scroll', function() {
+        document.getElementById('lineNumbers').scrollTop = this.scrollTop;
+    });
+
+    // Initialize line numbers
+    updateLineNumbers();
+
+    // Run code function
+    async function runCode() {
+        const code = document.getElementById('codeEditor').value;
+        const output = document.getElementById('outputConsole');
+        const runButton = event.target;
+        
+        // Show loading state
+        runButton.disabled = true;
+        runButton.textContent = '⏳ Running...';
+        output.innerHTML = '<div class="output-line output-log">Executing code...</div>';
+        
+        try {
+            const response = await fetch('{{ url_for("main.execute_code") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    code: code,
+                    language: 'python'
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                output.innerHTML = `
+                    <div class="output-line output-success">✓ Code executed successfully!</div>
+                    <div class="output-line output-log">${escapeHtml(data.output)}</div>
+                    <div class="output-line" style="color: #4ec9b0; margin-top: 10px;">Program completed successfully</div>
+                `;
+                
+                // Show success indicator if correct
+                if (code.includes('print') && code.includes('Hello')) {
+                    document.getElementById('successIndicator').style.display = 'block';
+                }
+            } else {
+                output.innerHTML = `
+                    <div class="output-line output-error">✗ Execution Error</div>
+                    <div class="output-line output-error">${escapeHtml(data.error)}</div>
+                    <div class="output-line output-log">${escapeHtml(data.output)}</div>
+                `;
+            }
+        } catch (error) {
+            output.innerHTML = `
+                <div class="output-line output-error">✗ Network Error</div>
+                <div class="output-line output-error">${escapeHtml(error.message)}</div>
+            `;
+        } finally {
+            // Reset button state
+            runButton.disabled = false;
+            runButton.innerHTML = '▶️ Run Code';
+        }
+    }
+
+    function escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // Reset code function
+    function resetCode() {
+        document.getElementById('codeEditor').value = '# Print your name and age\nname = "John"\nage = 25\nprint("Hello! My name is " + name + " and I am " + str(age) + " years old.")';
+        updateLineNumbers();
+        document.getElementById('outputConsole').innerHTML = '<div class="output-line output-log">Code has been reset...</div>';
+        document.getElementById('successIndicator').style.display = 'none';
+    }
+
+    // Select lesson function
+    function selectLesson(element) {
+        document.querySelectorAll('.lesson-item').forEach(item => item.classList.remove('active'));
+        element.classList.add('active');
+    }
+
+    // Complete lesson function
+    function completeLesson() {
+        alert('🎉 Congratulations! You completed this lesson!\n\nMoving to the next lesson...');
+    }
+</script>
+
+{% endblock %}

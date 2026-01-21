@@ -1,0 +1,262 @@
+{% extends "base_enhanced.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 style="animation: slideInDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);">📚 Digital Library</h1>
+        <p style="animation: slideInUp 0.8s ease 0.2s both;">Access thousands of books, journals, and educational resources. Expand your knowledge anytime, anywhere.</p>
+        <div class="hero-cta" style="max-width: 600px; margin: 2rem auto 0; display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeIn 1s ease 0.4s both;">
+            <a href="{{ url_for('elibrary.search_internet') }}" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>🌐 Search Internet Books</span></a>
+            <button class="btn btn-secondary" onclick="alert('Browse Local Collection')" style="flex: 1;"><span>📖 Browse Local</span></button>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Stats Section -->
+<section style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); padding: 3rem 0;">
+    <div class="container">
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--primary);">📚</div>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">15,000+</div>
+                <div style="color: var(--text-secondary); font-size: 0.95rem;">Books Available</div>
+            </div>
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--secondary);">👥</div>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">50,000+</div>
+                <div style="color: var(--text-secondary); font-size: 0.95rem;">Active Readers</div>
+            </div>
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #fbbf24;">⭐</div>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">4.8/5</div>
+                <div style="color: var(--text-secondary); font-size: 0.95rem;">Average Rating</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Books Section -->
+<section style="padding: 4rem 0;">
+    <div class="container">
+        <div class="section-title">
+            <h2>✨ Featured Collections</h2>
+            <p>Explore our most popular and highly-rated books</p>
+        </div>
+        <div class="grid grid-3">
+            <!-- Book 1 -->
+            <div class="card book-card">
+                <div class="book-header">📕</div>
+                <div class="book-body">
+                    <h3>Introduction to Algorithms</h3>
+                    <div class="course-meta">
+                        <span>✍️ T.H. Cormen</span>
+                        <span class="badge badge-primary">CS</span>
+                    </div>
+                    <p>A comprehensive guide to algorithms and data structures. The definitive textbook used in universities worldwide.</p>
+                    <div class="course-meta">
+                        <span>📖 1328 pages</span>
+                        <span class="course-rating">⭐ 4.9</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="#" onclick="event.preventDefault(); handleBookClick('algorithms', 'Introduction to Algorithms')" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book 2 -->
+            <div class="card book-card">
+                <div class="book-header">📗</div>
+                <div class="book-body">
+                    <h3>Clean Code</h3>
+                    <div class="course-meta">
+                        <span>✍️ Robert Martin</span>
+                        <span class="badge badge-primary">Dev</span>
+                    </div>
+                    <p>Learn best practices for writing clean, maintainable, and professional code. Essential reading for all developers.</p>
+                    <div class="course-meta">
+                        <span>📖 464 pages</span>
+                        <span class="course-rating">⭐ 4.8</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="#" onclick="event.preventDefault(); handleBookClick('clean-code', 'Clean Code')" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book 3 -->
+            <div class="card book-card">
+                <div class="book-header">📘</div>
+                <div class="book-body">
+                    <h3>Thinking, Fast and Slow</h3>
+                    <div class="course-meta">
+                        <span>✍️ Daniel Kahneman</span>
+                        <span class="badge badge-primary">Psychology</span>
+                    </div>
+                    <p>Explore how human thinking and decision-making works. Understand cognitive biases and heuristics.</p>
+                    <div class="course-meta">
+                        <span>📖 499 pages</span>
+                        <span class="course-rating">⭐ 4.7</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="#" onclick="event.preventDefault(); handleBookClick('thinking-fast-slow', 'Thinking, Fast and Slow')" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book 4 -->
+            <div class="card book-card">
+                <div class="book-header">📙</div>
+                <div class="book-body">
+                    <h3>The Pragmatic Programmer</h3>
+                    <div class="course-meta">
+                        <span>✍️ Hunt & Thomas</span>
+                        <span class="badge badge-primary">Dev</span>
+                    </div>
+                    <p>Practical tips and techniques for successful software development. Timeless wisdom for every programmer.</p>
+                    <div class="course-meta">
+                        <span>📖 352 pages</span>
+                        <span class="course-rating">⭐ 4.8</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="#" onclick="event.preventDefault(); handleBookClick('pragmatic-programmer', 'The Pragmatic Programmer')" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book 5 -->
+            <div class="card book-card">
+                <div class="book-header">📓</div>
+                <div class="book-body">
+                    <h3>Design Patterns</h3>
+                    <div class="course-meta">
+                        <span>✍️ Gang of Four</span>
+                        <span class="badge badge-primary">Design</span>
+                    </div>
+                    <p>Essential guide to reusable object-oriented software design patterns.</p>
+                    <div class="course-meta">
+                        <span>📖 395 pages</span>
+                        <span class="course-rating">⭐ 4.7</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="#" onclick="event.preventDefault(); handleBookClick('design-patterns', 'Design Patterns')" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book 6 -->
+            <div class="card book-card">
+                <div class="book-header">📔</div>
+                <div class="book-body">
+                    <h3>Refactoring</h3>
+                    <div class="course-meta">
+                        <span>✍️ Martin Fowler</span>
+                        <span class="badge badge-primary">Dev</span>
+                    </div>
+                    <p>Improving the Design of Existing Code with proven refactoring techniques.</p>
+                    <div class="course-meta">
+                        <span>📖 418 pages</span>
+                        <span class="course-rating">⭐ 4.8</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="#" onclick="event.preventDefault(); handleBookClick('refactoring', 'Refactoring')" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section style="background: var(--bg-secondary); padding: 4rem 0;">
+    <div class="container">
+        <div class="section-title">
+            <h2>📂 Browse by Category</h2>
+            <p>Find books in your favorite subjects</p>
+        </div>
+        <div class="grid grid-3">
+            <div class="card" style="cursor: pointer; text-align: center; transition: all var(--transition);" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="padding: 30px 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; display: inline-block;">💻</div>
+                    <h4 style="margin: 1rem 0 0.5rem 0; font-size: 1.25rem;">Technology</h4>
+                    <p style="color: var(--text-tertiary); margin: 0; font-size: 0.95rem;">2,450 Books</p>
+                </div>
+            </div>
+            <div class="card" style="cursor: pointer; text-align: center; transition: all var(--transition);" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="padding: 30px 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; display: inline-block;">📊</div>
+                    <h4 style="margin: 1rem 0 0.5rem 0; font-size: 1.25rem;">Business</h4>
+                    <p style="color: var(--text-tertiary); margin: 0; font-size: 0.95rem;">1,820 Books</p>
+                </div>
+            </div>
+            <div class="card" style="cursor: pointer; text-align: center; transition: all var(--transition);" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="padding: 30px 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; display: inline-block;">🎨</div>
+                    <h4 style="margin: 1rem 0 0.5rem 0; font-size: 1.25rem;">Creative Arts</h4>
+                    <p style="color: var(--text-tertiary); margin: 0; font-size: 0.95rem;">1,340 Books</p>
+                </div>
+            </div>
+            <div class="card" style="cursor: pointer; text-align: center; transition: all var(--transition);" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="padding: 30px 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; display: inline-block;">🧬</div>
+                    <h4 style="margin: 1rem 0 0.5rem 0; font-size: 1.25rem;">Science</h4>
+                    <p style="color: var(--text-tertiary); margin: 0; font-size: 0.95rem;">1,650 Books</p>
+                </div>
+            </div>
+            <div class="card" style="cursor: pointer; text-align: center; transition: all var(--transition);" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="padding: 30px 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; display: inline-block;">🌍</div>
+                    <h4 style="margin: 1rem 0 0.5rem 0; font-size: 1.25rem;">History</h4>
+                    <p style="color: var(--text-tertiary); margin: 0; font-size: 0.95rem;">980 Books</p>
+                </div>
+            </div>
+            <div class="card" style="cursor: pointer; text-align: center; transition: all var(--transition);" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="padding: 30px 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; display: inline-block;">🧠</div>
+                    <h4 style="margin: 1rem 0 0.5rem 0; font-size: 1.25rem;">Psychology</h4>
+                    <p style="color: var(--text-tertiary); margin: 0; font-size: 0.95rem;">1,120 Books</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); padding: 4rem 0;">
+    <div class="container" style="text-align: center;">
+        <h2 style="animation: slideInDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); margin-bottom: 1rem;">🚀 Start Your Learning Journey</h2>
+        <p style="font-size: 1.125rem; margin-bottom: 2rem; color: var(--text-secondary); animation: slideInUp 0.8s ease 0.2s both;">Access thousands of books and resources from our extensive digital library</p>
+        <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="animation: fadeIn 1s ease 0.4s both;"><span>📚 Access Library Now</span></a>
+    </div>
+</section>
+
+<script>
+function handleBookClick(bookId, bookName) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--bg-secondary);
+        border: 2px solid var(--primary);
+        padding: 30px 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        z-index: 9999;
+        text-align: center;
+        animation: slideInDown 0.3s ease-out;
+    `;
+    notification.innerHTML = `
+        <h2 style="color: var(--text-primary); margin: 0 0 10px 0;">📖 Reading Book</h2>
+        <p style="color: var(--text-secondary); margin: 0 0 20px 0; font-size: 1.05rem;"><strong>${bookName}</strong></p>
+        <button onclick="this.parentElement.remove()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 10px;">Start Reading</button>
+        <button onclick="this.parentElement.remove()" style="padding: 10px 20px; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 600;">Later</button>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        if (notification.parentElement) notification.remove();
+    }, 5000);
+}
+</script>
+{% endblock %}

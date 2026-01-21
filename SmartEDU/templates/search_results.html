@@ -1,0 +1,130 @@
+{% extends "base_enhanced.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));">
+    <div class="hero-content">
+        <h1>🔍 Search Results</h1>
+        {% if query %}
+        <p>Results for: <strong>"{{ query }}"</strong></p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Search Box -->
+<section>
+    <div class="container">
+        <div style="max-width: 600px; margin: 0 auto 2rem;">
+            <form method="GET" action="{{ url_for('elibrary.search_book') }}" style="display: flex; gap: 0.5rem;">
+                <input type="text" name="q" value="{{ query }}" placeholder="🔍 Search another book..." style="border-radius: 2rem; padding: 1rem 1.5rem; flex: 1; border: 2px solid #ccc; background: white; color: #333; font-size: 1rem;">
+                <button type="submit" class="btn btn-primary"><span>Search</span></button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Results Section -->
+<section>
+    <div class="container">
+        {% if results %}
+            {% for book in results %}
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="padding: 2rem;">
+                    <div style="display: grid; grid-template-columns: 150px 1fr; gap: 2rem; align-items: start;">
+                        <!-- Book Cover -->
+                        <div style="text-align: center;">
+                            <div style="font-size: 5rem; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">📖</div>
+                        </div>
+
+                        <!-- Book Info -->
+                        <div>
+                            <h2 style="margin: 0 0 1rem 0;">{{ book.title }}</h2>
+                            <p style="color: var(--text-secondary); margin: 0 0 1.5rem 0; font-size: 1.1rem;">
+                                <strong>by {{ book.author }}</strong>
+                            </p>
+
+                            <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">
+                                {{ book.description }}
+                            </p>
+
+                            <h3 style="margin: 1.5rem 0 1rem 0;">📚 Available Sources</h3>
+                            <div style="display: grid; gap: 0.75rem;">
+                                {% for source in book.sources %}
+                                <a href="{{ source.url }}" 
+                                   target="_blank" 
+                                   rel="noopener noreferrer"
+                                   class="btn btn-primary" 
+                                   style="padding: 1rem; text-decoration: none; text-align: left; display: flex; align-items: center; justify-content: space-between;">
+                                    <span>🔗 {{ source.name }}</span>
+                                    <span style="font-size: 1.2rem;">→</span>
+                                </a>
+                                {% endfor %}
+                            </div>
+
+                            <div style="margin-top: 2rem; padding: 1rem; background: var(--bg-secondary); border-radius: 8px; border-left: 4px solid #667eea;">
+                                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">
+                                    <strong>💡 Tip:</strong> Click any source above to start reading. We've found the best available copies across the internet for you!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card" style="text-align: center; padding: 3rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                <h2>Start Your Search</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                    {% if query %}
+                    No results found for "{{ query }}". Try searching with different keywords.
+                    {% else %}
+                    Enter a book title, author name, or topic to find millions of books available online.
+                    {% endif %}
+                </p>
+                <div style="max-width: 500px; margin: 0 auto;">
+                    <form method="GET" action="{{ url_for('elibrary.search_book') }}" style="display: flex; gap: 0.5rem;">
+                        <input type="text" name="q" placeholder="Search for any book..." style="border-radius: 2rem; padding: 1rem 1.5rem; flex: 1; border: 2px solid #ccc; background: white; color: #333;">
+                        <button type="submit" class="btn btn-primary"><span>Search</span></button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Popular Books Suggestions -->
+<section>
+    <div class="container">
+        <div class="card" style="padding: 2rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1)); text-align: center;">
+            <h3>💭 Popular Searches</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Try searching for these popular books:</p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                <form method="GET" action="{{ url_for('elibrary.search_book') }}" style="display: contents;">
+                    <button type="submit" name="q" value="Pride and Prejudice" class="btn btn-secondary" style="padding: 0.75rem 1.5rem; text-decoration: none; border: none; cursor: pointer;">Pride and Prejudice</button>
+                    <button type="submit" name="q" value="1984" class="btn btn-secondary" style="padding: 0.75rem 1.5rem; text-decoration: none; border: none; cursor: pointer;">1984</button>
+                    <button type="submit" name="q" value="The Great Gatsby" class="btn btn-secondary" style="padding: 0.75rem 1.5rem; text-decoration: none; border: none; cursor: pointer;">The Great Gatsby</button>
+                    <button type="submit" name="q" value="To Kill a Mockingbird" class="btn btn-secondary" style="padding: 0.75rem 1.5rem; text-decoration: none; border: none; cursor: pointer;">To Kill a Mockingbird</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.btn-secondary {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 2rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #667eea;
+    color: white;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SmartEDU Pro - Learn Smarter, Grow Faster{% endblock %}</title>
+    
+    <!-- Primary CSS File -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_enhanced.css') }}">
+    
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="SmartEDU Pro - The ultimate platform for modern, advanced e-learning and digital library services">
+    {% block extra_css %}{% endblock %}
+</head>
+<body data-theme="light">
+    <!-- Dark/Light Mode Toggle -->
+    <div class="theme-toggle-container">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Navigation Bar -->
+    {% include 'navbar_enhanced.html' %}
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert-container">
+                    <div class="alert alert-{{ category }}">
+                        <span>{{ message }}</span>
+                        <button class="alert-close">&times;</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-section fade-in-animation">
+                        <h4>About SmartEdu Pro</h4>
+                        <p>Revolutionizing online education through innovative, advanced learning solutions. Empowering millions of learners worldwide.</p>
+                    </div>
+                    <div class="footer-section fade-in-animation">
+                        <h4>Explore</h4>
+                        <ul>
+                            <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                            <li><a href="{{ url_for('elearning.index') }}">Courses</a></li>
+                            <li><a href="{{ url_for('elibrary.index') }}">Library</a></li>
+                            <li><a href="#">Blog</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section fade-in-animation">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section fade-in-animation">
+                        <h4>Community</h4>
+                        <ul>
+                            <li><a href="#">Forum</a></li>
+                            <li><a href="#">Newsletter</a></li>
+                            <li><a href="#">Events</a></li>
+                            <li><a href="#">Careers</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 SmartEdu Pro. Crafted with ❤️ for learners worldwide.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================
+        // COMPREHENSIVE THEME SYSTEM
+        // ============================================
+        
+        class SmartThemeManager {
+            constructor() {
+                this.init();
+            }
+            
+            init() {
+                // Load saved theme or default to 'light'
+                const savedTheme = localStorage.getItem('smartedu-theme') || 'light';
+                this.setTheme(savedTheme);
+                this.setupThemeToggle();
+                this.applySystemTheme();
+            }
+            
+            setTheme(theme) {
+                const html = document.documentElement;
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem('smartedu-theme', theme);
+                this.updateToggleIcon();
+            }
+            
+            setupThemeToggle() {
+                const toggle = document.getElementById('themeToggle');
+                if (toggle) {
+                    toggle.addEventListener('click', () => {
+                        const current = document.documentElement.getAttribute('data-theme') || 'light';
+                        const newTheme = current === 'light' ? 'dark' : 'light';
+                        this.setTheme(newTheme);
+                        this.showThemeNotification(newTheme);
+                    });
+                }
+            }
+            
+            updateToggleIcon() {
+                const toggle = document.getElementById('themeToggle');
+                if (!toggle) return;
+                
+                const theme = document.documentElement.getAttribute('data-theme') || 'light';
+                const sunIcon = toggle.querySelector('.sun-icon');
+                const moonIcon = toggle.querySelector('.moon-icon');
+                
+                if (theme === 'dark') {
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                    toggle.setAttribute('aria-label', 'Switch to Light Mode');
+                } else {
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                    toggle.setAttribute('aria-label', 'Switch to Dark Mode');
+                }
+            }
+            
+            applySystemTheme() {
+                // If no saved preference and system supports prefers-color-scheme
+                if (!localStorage.getItem('smartedu-theme') && 
+                    window.matchMedia && 
+                    window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    this.setTheme('dark');
+                }
+            }
+            
+            showThemeNotification(theme) {
+                const message = theme === 'dark' ? '🌙 Dark Mode Enabled' : '☀️ Light Mode Enabled';
+                const notification = document.createElement('div');
+                notification.className = 'theme-notification';
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 30px;
+                    right: 30px;
+                    background: var(--primary);
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 50px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    z-index: 9999;
+                    font-weight: 600;
+                    animation: slideInUp 0.3s ease-out;
+                `;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 2000);
+            }
+        }
+        
+        // Initialize theme manager
+        new SmartThemeManager();
+        
+        // ============================================
+        // BUTTON FUNCTIONALITY
+        // ============================================
+        
+        // Alert close button functionality
+        document.querySelectorAll('.alert-close').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                this.parentElement.style.animation = 'slideOut 0.3s ease-out forwards';
+                setTimeout(() => this.parentElement.remove(), 300);
+            });
+        });
+        
+        // Make all links and buttons properly functional
+        document.querySelectorAll('button, a[href^="#"]').forEach(element => {
+            element.addEventListener('click', function(e) {
+                // Ensure proper event handling
+                if (this.hasAttribute('href') && this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        // Ensure proper form submission
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                // Form will submit normally, no additional handling needed
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

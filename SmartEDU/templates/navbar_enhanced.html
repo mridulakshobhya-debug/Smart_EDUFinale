@@ -1,0 +1,587 @@
+<nav class="navbar navbar-enhanced">
+    <div class="container">
+        <div class="navbar-content">
+            <!-- Logo -->
+            <div class="navbar-brand">
+                <a href="{{ url_for('main.index') }}" class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">SmartEdu<span class="logo-accent">Pro</span></span>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Navigation Menu -->
+            <div class="navbar-menu" id="navbarMenu">
+                <div class="navbar-nav">
+                    <!-- Catalog Dropdown -->
+                    <div class="nav-item dropdown">
+                        <button class="nav-link dropdown-toggle" id="catalogDropdown">
+                            Catalog
+                            <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu" id="catalogMenu">
+                            <div class="dropdown-section">
+                                <h4>Languages</h4>
+                                <a href="{{ url_for('elearning.index') }}?filter=python" class="dropdown-item">Python</a>
+                                <a href="{{ url_for('elearning.index') }}?filter=javascript" class="dropdown-item">JavaScript</a>
+                                <a href="{{ url_for('elearning.index') }}?filter=java" class="dropdown-item">Java</a>
+                                <a href="{{ url_for('elearning.index') }}?filter=cpp" class="dropdown-item">C++</a>
+                                <a href="{{ url_for('elearning.index') }}" class="dropdown-item view-all">View All →</a>
+                            </div>
+                            <div class="dropdown-section">
+                                <h4>Subjects</h4>
+                                <a href="{{ url_for('elearning.index') }}?filter=web" class="dropdown-item">Web Development</a>
+                                <a href="{{ url_for('elearning.index') }}?filter=ai" class="dropdown-item">AI & Machine Learning</a>
+                                <a href="{{ url_for('elearning.index') }}?filter=data" class="dropdown-item">Data Science</a>
+                                <a href="{{ url_for('elearning.index') }}?filter=security" class="dropdown-item">Cybersecurity</a>
+                                <a href="{{ url_for('elearning.index') }}" class="dropdown-item view-all">View All →</a>
+                            </div>
+                            <div class="dropdown-section">
+                                <h4>Career Paths</h4>
+                                <a href="{{ url_for('elearning.index') }}" class="dropdown-item">Career Paths</a>
+                                <a href="{{ url_for('elearning.index') }}" class="dropdown-item">Full Catalog</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resources Dropdown -->
+                    <div class="nav-item dropdown">
+                        <button class="nav-link dropdown-toggle" id="resourcesDropdown">
+                            Resources
+                            <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu" id="resourcesMenu">
+                            <div class="dropdown-section">
+                                <h4>Learning Tools</h4>
+                                <a href="{{ url_for('elibrary.index') }}" class="dropdown-item">📚 Library</a>
+                                <a href="{{ url_for('main.ai') }}" class="dropdown-item">🤖 AI Tutor</a>
+                                <a href="#" class="dropdown-item">📝 Articles</a>
+                                <a href="#" class="dropdown-item">🎥 Videos</a>
+                            </div>
+                            <div class="dropdown-section">
+                                <h4>Reference</h4>
+                                <a href="#" class="dropdown-item">Cheatsheets</a>
+                                <a href="#" class="dropdown-item">Documentation</a>
+                                <a href="#" class="dropdown-item">Code Challenges</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Community Link -->
+                    <a href="#" class="nav-link">Community</a>
+
+                    <!-- Pricing Link -->
+                    <a href="#" class="nav-link">Pricing</a>
+
+                    <!-- Bootcamps Link -->
+                    <a href="#" class="nav-link">Bootcamps</a>
+                </div>
+
+                <!-- Right Side: Auth & User Menu -->
+                <div class="navbar-right">
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" class="theme-toggle-btn" title="Toggle theme">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    
+                    {% if current_user.is_authenticated %}
+                        <div class="nav-item dropdown user-menu">
+                            <button class="user-button" id="userDropdown">
+                                <div class="user-avatar">{{ current_user.username[0].upper() }}</div>
+                                <span class="username-text">{{ current_user.username }}</span>
+                                <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div class="dropdown-menu user-dropdown-menu" id="userMenu">
+                                <a href="{{ url_for('auth.profile') }}" class="dropdown-item">👤 Profile</a>
+                                <a href="{{ url_for('elearning.index') }}" class="dropdown-item">📚 My Courses</a>
+                                <a href="#" class="dropdown-item">⭐ My Achievements</a>
+                                <a href="#" class="dropdown-item">⚙️ Settings</a>
+                                <hr class="dropdown-divider">
+                                <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout">🚪 Logout</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="nav-link auth-link">Log In</a>
+                        <a href="{{ url_for('auth.signup') }}" class="nav-link btn-primary">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .navbar-enhanced {
+        background: var(--navbar-bg);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .navbar-enhanced {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+    }
+
+    .navbar-brand {
+        flex-shrink: 0;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 1.3rem;
+        color: var(--primary);
+        transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+        transform: scale(1.05);
+    }
+
+    .logo-icon {
+        font-size: 1.5rem;
+        animation: spin 3s linear infinite;
+    }
+
+    .logo-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .logo-accent {
+        color: #667eea;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .mobile-menu-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+
+    .mobile-menu-toggle span {
+        width: 25px;
+        height: 3px;
+        background: var(--text-primary);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+    .mobile-menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(8px, 8px);
+    }
+
+    .mobile-menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(8px, -8px);
+    }
+
+    .navbar-menu {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        flex: 1;
+        margin: 0 2rem;
+    }
+
+    .navbar-nav {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .nav-item {
+        position: relative;
+    }
+
+    .nav-link {
+        padding: 0.5rem 1rem;
+        color: var(--text-primary);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .nav-link:hover {
+        color: var(--primary);
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transform: translateX(-50%);
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+        width: 80%;
+    }
+
+    .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .dropdown-icon {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.3s ease;
+    }
+
+    .dropdown:hover .dropdown-icon {
+        transform: rotate(180deg);
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: var(--bg-primary);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        min-width: 300px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+    }
+
+    [data-theme="dark"] .dropdown-menu {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .dropdown:hover .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .dropdown-section {
+        margin-bottom: 1rem;
+    }
+
+    .dropdown-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .dropdown-section h4 {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        margin: 0 0 0.5rem 0;
+        letter-spacing: 0.5px;
+    }
+
+    .dropdown-item {
+        display: block;
+        padding: 0.75rem 1rem;
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: 0.95rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        margin-bottom: 0.25rem;
+    }
+
+    .dropdown-item:hover {
+        background: var(--bg-secondary);
+        color: var(--primary);
+        transform: translateX(4px);
+    }
+
+    .dropdown-item.view-all {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .dropdown-divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 0.5rem 0;
+    }
+
+    .navbar-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-shrink: 0;
+    }
+
+    .auth-link {
+        padding: 0.5rem 1rem !important;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white !important;
+        border-radius: 25px;
+        padding: 0.5rem 1.5rem !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary::after {
+        display: none !important;
+    }
+
+    .user-menu .dropdown-menu {
+        right: 0;
+        left: auto;
+        min-width: 200px;
+    }
+
+    .user-button {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 25px;
+        padding: 0.5rem 0.5rem 0.5rem 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--text-primary);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .user-button:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--primary);
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    .username-text {
+        white-space: nowrap;
+    }
+
+    .logout {
+        color: #ef4444 !important;
+        font-weight: 600;
+    }
+
+    .logout:hover {
+        background: rgba(239, 68, 68, 0.1) !important;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+        margin-right: 1rem;
+        padding: 0;
+    }
+
+    .theme-toggle-btn:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--primary);
+        transform: scale(1.05);
+    }
+
+    .theme-toggle-btn:active {
+        transform: scale(0.95);
+    }
+
+    .theme-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+    }
+
+    .theme-toggle-btn:hover .theme-icon {
+        transform: rotate(20deg);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .mobile-menu-toggle {
+            display: flex;
+        }
+
+        .navbar-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            flex-direction: column;
+            gap: 0;
+            margin: 0;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .navbar-menu.active {
+            max-height: 500px;
+        }
+
+        .navbar-nav {
+            flex-direction: column;
+            width: 100%;
+            gap: 0;
+        }
+
+        .nav-item {
+            width: 100%;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 1rem;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-link::after {
+            display: none;
+        }
+
+        .dropdown-menu {
+            position: static;
+            opacity: 0;
+            visibility: hidden;
+            max-height: 0;
+            overflow: hidden;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: all 0.3s ease;
+            margin: 0;
+            border: none;
+            border-top: 1px solid var(--border);
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            max-height: 500px;
+            transform: scaleY(1);
+        }
+
+        .navbar-right {
+            flex-direction: column;
+            width: 100%;
+            gap: 0.5rem;
+        }
+
+        .auth-link, .btn-primary {
+            width: 100%;
+            text-align: center;
+            padding: 1rem !important;
+        }
+    }
+</style>
+
+<script>
+    // Mobile Menu Toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navbarMenu = document.getElementById('navbarMenu');
+
+    mobileMenuToggle.addEventListener('click', () => {
+        mobileMenuToggle.classList.toggle('active');
+        navbarMenu.classList.toggle('active');
+    });
+
+    // Close menu when clicking a link
+    document.querySelectorAll('.navbar-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenuToggle.classList.remove('active');
+            navbarMenu.classList.remove('active');
+        });
+    });
+
+    // Mobile dropdown toggle
+    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                const parent = this.closest('.dropdown');
+                parent.classList.toggle('active');
+            }
+        });
+    });
+</script>

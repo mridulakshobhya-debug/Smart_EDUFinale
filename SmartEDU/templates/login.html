@@ -1,0 +1,334 @@
+{% extends "base_enhanced.html" %}
+
+{% block content %}
+<style>
+    .auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .auth-page::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    .auth-page::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -5%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(118, 75, 162, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 25s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(20px); }
+    }
+
+    .auth-container {
+        width: 100%;
+        max-width: 450px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .auth-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 50px 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .auth-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin: 0 0 8px 0;
+        text-align: center;
+    }
+
+    .auth-subtitle {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        text-align: center;
+        margin: 0 0 32px 0;
+    }
+
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .auth-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .auth-form-group label {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+
+    .auth-form-group input {
+        padding: 14px 16px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    .auth-form-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        background: var(--bg-primary);
+    }
+
+    .auth-form-group input::placeholder {
+        color: var(--text-tertiary);
+    }
+
+    .auth-checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .auth-checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--primary);
+    }
+
+    .auth-checkbox-group label {
+        cursor: pointer;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        margin: 0;
+    }
+
+    .auth-submit {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 14px 24px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        margin-top: 8px;
+    }
+
+    .auth-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .auth-submit:active {
+        transform: translateY(0);
+    }
+
+    .auth-divider {
+        text-align: center;
+        color: var(--text-tertiary);
+        margin: 28px 0;
+        font-size: 0.95rem;
+        position: relative;
+    }
+
+    .auth-divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--border);
+        z-index: -1;
+    }
+
+    .auth-divider::after {
+        content: '';
+        display: none;
+    }
+
+    .auth-links {
+        text-align: center;
+        padding: 0 0 24px;
+    }
+
+    .auth-links a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .auth-links a:hover {
+        color: var(--secondary);
+        text-decoration: underline;
+    }
+
+    .auth-footer {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-tertiary);
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+    }
+
+    .auth-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .auth-footer a:hover {
+        color: var(--secondary);
+        text-decoration: underline;
+    }
+
+    .auth-theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .auth-theme-toggle:hover {
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    @media (max-width: 480px) {
+        .auth-card {
+            padding: 40px 24px;
+        }
+
+        .auth-title {
+            font-size: 1.75rem;
+        }
+
+        .auth-subtitle {
+            font-size: 0.95rem;
+        }
+    }
+</style>
+
+<section class="auth-page">
+    <button class="auth-theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+    </button>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Welcome Back</h1>
+            <p class="auth-subtitle">Sign in to your SmartEdu account and continue learning</p>
+
+            <form method="POST" class="auth-form">
+                <div class="auth-form-group">
+                    <label for="email">Email or Username</label>
+                    <input type="text" id="email" name="email" required placeholder="your@email.com or username">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+
+                <div class="auth-checkbox-group">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me for 30 days</label>
+                </div>
+
+                <button type="submit" class="btn auth-submit"><span>Sign In</span></button>
+            </form>
+
+            <div class="auth-divider">New to SmartEdu?</div>
+
+            <div class="auth-links">
+                <a href="{{ url_for('auth.signup') }}">Create a free account →</a>
+            </div>
+
+            <div class="auth-footer">
+                By signing in, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function toggleTheme() {
+    const root = document.documentElement;
+    const currentTheme = root.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    root.setAttribute('data-theme', newTheme);
+    localStorage.setItem('smartedu-theme', newTheme);
+    
+    // Show notification
+    const message = newTheme === 'dark' ? '🌙 Dark Mode Enabled' : '☀️ Light Mode Enabled';
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: var(--primary);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 9999;
+        font-weight: 600;
+        animation: slideInUp 0.3s ease-out;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 2000);
+}
+
+// Initialize theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('smartedu-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});
+</script>
+{% endblock %}
+
+

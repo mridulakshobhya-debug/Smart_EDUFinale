@@ -1,0 +1,824 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Slideshow Styles */
+    .hero-slideshow {
+        position: relative;
+        height: 85vh;
+        overflow: hidden;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .slideshow-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .slide {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+
+    .slide.active {
+        display: block;
+        opacity: 1;
+    }
+
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .slide-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.5) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+    }
+
+    .slide-content {
+        text-align: center;
+        color: white;
+        max-width: 800px;
+        padding: 40px 20px;
+    }
+
+    .slide-content h2 {
+        font-size: 4.5rem;
+        font-weight: 800;
+        margin: 0 0 20px 0;
+        animation: slideInDown 0.8s ease-out forwards;
+        opacity: 0;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        letter-spacing: -1px;
+    }
+
+    .slide-content p {
+        font-size: 1.4rem;
+        margin: 0 0 30px 0;
+        animation: slideInUp 0.8s ease-out 0.2s forwards;
+        opacity: 0;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .slide-content .cta-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        animation: slideInUp 0.8s ease-out 0.4s forwards;
+        opacity: 0;
+        flex-wrap: wrap;
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .slide-nav {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 15px;
+        z-index: 10;
+    }
+
+    .slide-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .slide-dot.active {
+        background: white;
+        transform: scale(1.4);
+        width: 32px;
+        border-radius: 6px;
+    }
+
+    .slide-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 20px 25px;
+        z-index: 10;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+    }
+
+    .slide-arrow:hover {
+        background: rgba(255, 255, 255, 0.4);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .slide-arrow.prev {
+        left: 20px;
+    }
+
+    .slide-arrow.next {
+        right: 20px;
+    }
+
+    /* CTA Buttons */
+    .cta-button {
+        display: inline-block;
+        background: white;
+        color: #667eea;
+        padding: 16px 40px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .cta-button-outline {
+        background: transparent;
+        border: 2px solid white;
+        color: white;
+    }
+
+    .cta-button-outline:hover {
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Skills Section */
+    .skills-section {
+        padding: 100px 20px;
+        background: linear-gradient(180deg, #f8f9ff 0%, #f0f2ff 100%);
+        position: relative;
+    }
+
+    .section-title-main {
+        text-align: center;
+        margin-bottom: 80px;
+    }
+
+    .section-title-main h2 {
+        font-size: 3.5rem;
+        color: #333;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .section-title-main .highlight {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .section-title-main p {
+        font-size: 1.25rem;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+
+    .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1300px;
+        margin: 0 auto;
+        margin-bottom: 50px;
+    }
+
+    .skill-card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: 16px;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skill-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+    }
+
+    .skill-card:hover {
+        transform: translateY(-12px);
+        border-color: #667eea;
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.25);
+    }
+
+    .skill-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .skill-icon {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        display: inline-block;
+    }
+
+    .skill-card h3 {
+        font-size: 1.4rem;
+        color: #333;
+        margin: 15px 0;
+        font-weight: 700;
+    }
+
+    .skill-card p {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    /* Success Stories Section */
+    .success-stories {
+        padding: 100px 20px;
+        background: white;
+    }
+
+    .stories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        max-width: 1300px;
+        margin: 0 auto;
+    }
+
+    .story-card {
+        padding: 30px;
+        border-radius: 12px;
+        background: #f8f9ff;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .story-card:hover {
+        transform: translateX(8px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .story-rating {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        color: #f59e0b;
+    }
+
+    .story-quote {
+        font-size: 1rem;
+        color: #333;
+        font-style: italic;
+        margin-bottom: 20px;
+        line-height: 1.8;
+    }
+
+    .story-author {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .story-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    .story-info h4 {
+        margin: 0 0 3px 0;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .story-info p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    /* Courses Section */
+    .featured-courses {
+        padding: 100px 20px;
+        background: linear-gradient(180deg, #f0f2ff 0%, #ffffff 100%);
+    }
+
+    .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        max-width: 1300px;
+        margin: 0 auto;
+    }
+
+    .course-card-large {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 16px;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .course-card-large::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        transition: all 0.6s ease;
+    }
+
+    .course-card-large:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+    }
+
+    .course-card-large:hover::before {
+        top: -30%;
+        right: -30%;
+    }
+
+    .course-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .course-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        backdrop-filter: blur(10px);
+    }
+
+    .course-card-large h3 {
+        font-size: 1.6rem;
+        margin: 10px 0 15px 0;
+        font-weight: 700;
+    }
+
+    .course-card-large p {
+        font-size: 0.95rem;
+        opacity: 0.95;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .course-meta-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .course-meta {
+        font-size: 0.85rem;
+        opacity: 0.9;
+    }
+
+    /* CTA Section */
+    .final-cta {
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-align: center;
+    }
+
+    .final-cta h2 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        font-weight: 800;
+        color: white;
+    }
+
+    .final-cta p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto 40px;
+        opacity: 0.95;
+        color: white;
+    }
+
+    .final-cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .slide-content h2 {
+            font-size: 2.5rem;
+        }
+
+        .slide-content p {
+            font-size: 1.1rem;
+        }
+
+        .section-title-main h2 {
+            font-size: 2.2rem;
+        }
+
+        .skill-card {
+            padding: 30px 20px;
+        }
+
+        .skills-grid,
+        .courses-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .slide-content .cta-buttons {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cta-button {
+            width: 100%;
+        }
+
+        .hero-slideshow {
+            height: 70vh;
+        }
+
+        .final-cta h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<!-- Hero Slideshow Section -->
+<section class="hero-slideshow">
+    <div class="slideshow-container">
+        <!-- Slide 1 -->
+        <div class="slide active">
+            <img src="/static/images/businessman-using-laptop-while-sitting-with-young-coworkers-conference-table-coworking-office.jpg" alt="Learning Together">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>Learn Together</h2>
+                    <p>Collaborate with thousands of learners and grow your skills at your own pace</p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('auth.signup') }}" class="cta-button">Get Started Free</a>
+                        <a href="#skills" class="cta-button cta-button-outline">Explore Courses</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+            <img src="/static/images/creative-group-working-startup-using-laptops.jpg" alt="Creative Learning">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>Build Your Career</h2>
+                    <p>Master in-demand skills in web development, AI, data science, and more</p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('elearning.index') }}" class="cta-button">Browse Courses</a>
+                        <a href="#" class="cta-button cta-button-outline">View Paths</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+            <img src="/static/images/modern-equipped-computer-lab (1).jpg" alt="Modern Learning">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>Learn By Doing</h2>
+                    <p>Interactive coding environments and hands-on projects to reinforce your learning</p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('elearning.index') }}" class="cta-button">Start Learning</a>
+                        <a href="#" class="cta-button cta-button-outline">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide">
+            <img src="/static/images/multiethnic-designers-sitting-together-working-laptops-coworking-space.jpg" alt="Diverse Learning">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>Join Global Community</h2>
+                    <p>Connect with developers, designers, and tech enthusiasts from around the world</p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('auth.signup') }}" class="cta-button">Join Now</a>
+                        <a href="#" class="cta-button cta-button-outline">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide">
+            <img src="/static/images/people-analyzing-checking-finance-graphs-office.jpg" alt="Data Analytics">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>Data-Driven Success</h2>
+                    <p>Unlock insights and advance your career with data science and analytics</p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('elearning.index') }}" class="cta-button">Explore Courses</a>
+                        <a href="#" class="cta-button cta-button-outline">See Paths</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Dots -->
+        <div class="slide-nav">
+            <span class="slide-dot active" onclick="currentSlide(0)"></span>
+            <span class="slide-dot" onclick="currentSlide(1)"></span>
+            <span class="slide-dot" onclick="currentSlide(2)"></span>
+            <span class="slide-dot" onclick="currentSlide(3)"></span>
+            <span class="slide-dot" onclick="currentSlide(4)"></span>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button class="slide-arrow prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="slide-arrow next" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+</section>
+
+<!-- Skills & Learning Paths Section -->
+<section class="skills-section" id="skills">
+    <div class="container" style="max-width: 1300px;">
+        <div class="section-title-main">
+            <h2>Master <span class="highlight">/skills</span> that matter</h2>
+            <p>Learn in-demand technologies and advance your career with our comprehensive courses and learning paths</p>
+        </div>
+
+        <div class="skills-grid">
+            <div class="skill-card">
+                <div class="skill-icon">💻</div>
+                <h3>Web Development</h3>
+                <p>Build modern, responsive websites with HTML, CSS, JavaScript, React, Vue.js, and more</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🐍</div>
+                <h3>Python Programming</h3>
+                <p>Master the most versatile language for web apps, automation, data science, and AI/ML</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🤖</div>
+                <h3>AI & Machine Learning</h3>
+                <p>Explore artificial intelligence, neural networks, deep learning, and practical AI applications</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">📊</div>
+                <h3>Data Science & Analytics</h3>
+                <p>Analyze big data, create visualizations, and make data-driven business decisions</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">☁️</div>
+                <h3>Cloud Computing</h3>
+                <p>Deploy and manage applications on AWS, Azure, Google Cloud, and container platforms</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🔐</div>
+                <h3>Cybersecurity</h3>
+                <p>Protect systems with ethical hacking, security protocols, and compliance best practices</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">📱</div>
+                <h3>Mobile Development</h3>
+                <p>Build iOS and Android apps with Flutter, React Native, Swift, and native technologies</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🎮</div>
+                <h3>Game Development</h3>
+                <p>Create games using Unity, Unreal Engine, and Godot with full 2D and 3D capabilities</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Success Stories Section -->
+<section class="success-stories">
+    <div class="container" style="max-width: 1300px;">
+        <div class="section-title-main">
+            <h2>Success Stories from Our Learners</h2>
+            <p>Real people achieving real results with SmartEdu</p>
+        </div>
+
+        <div class="stories-grid">
+            <div class="story-card">
+                <div class="story-rating">⭐⭐⭐⭐⭐</div>
+                <div class="story-quote">
+                    "I landed my dream job as a full-stack developer after completing the web development path. The practical projects were crucial!"
+                </div>
+                <div class="story-author">
+                    <div class="story-avatar">JD</div>
+                    <div class="story-info">
+                        <h4>John Davidson</h4>
+                        <p>Full Stack Developer, Tech Startup</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-rating">⭐⭐⭐⭐⭐</div>
+                <div class="story-quote">
+                    "The AI and machine learning courses gave me the confidence to transition from finance to tech. Best decision ever!"
+                </div>
+                <div class="story-author">
+                    <div class="story-avatar">SJ</div>
+                    <div class="story-info">
+                        <h4>Sarah Johnson</h4>
+                        <p>AI Engineer, Fortune 500 Company</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-rating">⭐⭐⭐⭐⭐</div>
+                <div class="story-quote">
+                    "The cybersecurity certification helped me get a 30% salary increase. SmartEdu's content is industry-relevant and up-to-date."
+                </div>
+                <div class="story-author">
+                    <div class="story-avatar">MK</div>
+                    <div class="story-info">
+                        <h4>Mike Kumar</h4>
+                        <p>Security Analyst, Enterprise IT</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Courses Section -->
+<section class="featured-courses">
+    <div class="container" style="max-width: 1300px;">
+        <div class="section-title-main">
+            <h2>Featured Learning Paths</h2>
+            <p>Start your journey with our most popular and comprehensive courses</p>
+        </div>
+
+        <div class="courses-grid">
+            <div class="course-card-large">
+                <div class="course-content">
+                    <div class="course-badge">🚀 Most Popular</div>
+                    <h3>Full Stack Web Developer</h3>
+                    <p>Learn frontend and backend development to build complete web applications from scratch. Master React, Node.js, databases, and deployment.</p>
+                    <div class="course-meta-info">
+                        <div class="course-meta">👥 50K+ Learners</div>
+                        <div class="course-meta">⏱️ 60 Hours</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="course-card-large" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                <div class="course-content">
+                    <div class="course-badge">🎯 Advanced</div>
+                    <h3>AI & Machine Learning Specialist</h3>
+                    <p>Master AI concepts, build neural networks, and create intelligent applications. Perfect for aspiring ML engineers and data scientists.</p>
+                    <div class="course-meta-info">
+                        <div class="course-meta">👥 25K+ Learners</div>
+                        <div class="course-meta">⏱️ 80 Hours</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="course-card-large" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
+                <div class="course-content">
+                    <div class="course-badge">🔒 Certification</div>
+                    <h3>Cloud Computing with AWS</h3>
+                    <p>Deploy, manage, and scale applications on AWS. Get industry-recognized certification to boost your career in cloud infrastructure.</p>
+                    <div class="course-meta-info">
+                        <div class="course-meta">👥 35K+ Learners</div>
+                        <div class="course-meta">⏱️ 55 Hours</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA Section -->
+<section class="final-cta">
+    <h2>Ready to Transform Your Career?</h2>
+    <p>Join millions of learners worldwide who are mastering in-demand skills and building amazing careers</p>
+    <div class="final-cta-buttons">
+        <a href="{{ url_for('auth.signup') }}" class="cta-button" style="background: white; color: #667eea;">Start Free Today</a>
+        <a href="{{ url_for('elearning.index') }}" class="cta-button cta-button-outline">Explore Courses</a>
+    </div>
+</section>
+
+<script>
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.slide-dot');
+    const slideCount = slides.length;
+    let autoSlideTimer;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        slides[n].classList.add('active');
+        dots[n].classList.add('active');
+    }
+
+    function changeSlide(n) {
+        clearTimeout(autoSlideTimer);
+        currentSlideIndex = (currentSlideIndex + n + slideCount) % slideCount;
+        showSlide(currentSlideIndex);
+        autoSlide();
+    }
+
+    function currentSlide(n) {
+        clearTimeout(autoSlideTimer);
+        currentSlideIndex = n;
+        showSlide(currentSlideIndex);
+        autoSlide();
+    }
+
+    function autoSlide() {
+        autoSlideTimer = setTimeout(() => {
+            currentSlideIndex = (currentSlideIndex + 1) % slideCount;
+            showSlide(currentSlideIndex);
+            autoSlide();
+        }, 5000);
+    }
+
+    autoSlide();
+</script>
+{% endblock %}

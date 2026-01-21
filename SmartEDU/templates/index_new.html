@@ -1,0 +1,548 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Slideshow Styles */
+    .hero-slideshow {
+        position: relative;
+        height: 90vh;
+        overflow: hidden;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .slideshow-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .slide {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out;
+    }
+
+    .slide.active {
+        display: block;
+        opacity: 1;
+    }
+
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Animated Overlay */
+    .slide-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+    }
+
+    .slide-content {
+        text-align: center;
+        color: white;
+        max-width: 700px;
+        padding: 20px;
+    }
+
+    .slide-content h2 {
+        font-size: 4rem;
+        font-weight: 700;
+        margin: 0 0 20px 0;
+        animation: slideInDown 0.8s ease-out forwards;
+        opacity: 0;
+    }
+
+    .slide-content p {
+        font-size: 1.3rem;
+        margin: 0 0 30px 0;
+        animation: slideInUp 0.8s ease-out 0.2s forwards;
+        opacity: 0;
+    }
+
+    .slide-content .cta-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        animation: slideInUp 0.8s ease-out 0.4s forwards;
+        opacity: 0;
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Slideshow Controls */
+    .slide-nav {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 15px;
+        z-index: 10;
+    }
+
+    .slide-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .slide-dot.active {
+        background: white;
+        transform: scale(1.3);
+    }
+
+    .slide-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 20px 25px;
+        z-index: 10;
+        transition: all 0.3s ease;
+        border-radius: 5px;
+    }
+
+    .slide-arrow:hover {
+        background: rgba(255, 255, 255, 0.6);
+    }
+
+    .slide-arrow.prev {
+        left: 20px;
+    }
+
+    .slide-arrow.next {
+        right: 20px;
+    }
+
+    /* Skills Section */
+    .skills-section {
+        padding: 80px 20px;
+        background: linear-gradient(180deg, #f8f9ff 0%, #f0f2ff 100%);
+    }
+
+    .section-title-main {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .section-title-main h2 {
+        font-size: 3rem;
+        color: #333;
+        margin: 0 0 15px 0;
+        font-weight: 700;
+    }
+
+    .section-title-main p {
+        font-size: 1.2rem;
+        color: #666;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        max-width: 1200px;
+        margin: 0 auto;
+        margin-bottom: 40px;
+    }
+
+    .skill-card {
+        background: white;
+        padding: 35px 25px;
+        border-radius: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        border: 2px solid transparent;
+    }
+
+    .skill-card:hover {
+        transform: translateY(-8px);
+        border-color: #667eea;
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
+    }
+
+    .skill-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+    }
+
+    .skill-card h3 {
+        font-size: 1.3rem;
+        color: #333;
+        margin: 15px 0;
+        font-weight: 700;
+    }
+
+    .skill-card p {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 40px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .cta-button-outline {
+        background: transparent;
+        border: 2px solid white;
+        color: white;
+    }
+
+    .cta-button-outline:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Explore More Section */
+    .explore-more {
+        padding: 80px 20px;
+        background: white;
+        text-align: center;
+    }
+
+    .explore-more h2 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 40px;
+    }
+
+    .course-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto 40px;
+    }
+
+    .course-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: left;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .course-card h3 {
+        font-size: 1.3rem;
+        margin: 0 0 10px 0;
+    }
+
+    .course-card p {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    .course-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-top: 15px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .slide-content h2 {
+            font-size: 2.5rem;
+        }
+
+        .slide-content p {
+            font-size: 1rem;
+        }
+
+        .skill-card {
+            padding: 25px 15px;
+        }
+
+        .skills-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .slide-content .cta-buttons {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+</style>
+
+<!-- Hero Slideshow Section -->
+<section class="hero-slideshow">
+    <div class="slideshow-container">
+        <!-- Slide 1 -->
+        <div class="slide active">
+            <img src="/static/images/businessman-using-laptop-while-sitting-with-young-coworkers-conference-table-coworking-office.jpg" alt="Learning Together">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>Learn Together</h2>
+                    <p>Collaborate with thousands of learners worldwide and grow your skills</p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('elearning.index') }}" class="cta-button">Start Learning</a>
+                        <a href="#skills" class="cta-button cta-button-outline">Explore More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+            <img src="/static/images/creative-group-working-startup-using-laptops.jpg" alt="Creative Learning">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>Build Your Future</h2>
+                    <p>Master in-demand skills in web development, AI, data science, and more</p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('elearning.index') }}" class="cta-button">Browse Courses</a>
+                        <a href="{{ url_for('elibrary.index') }}" class="cta-button cta-button-outline">Library</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+            <img src="/static/images/modern-equipped-computer-lab (1).jpg" alt="Modern Learning">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>Technology Meets Education</h2>
+                    <p>Learn with cutting-edge tools and interactive coding environments</p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('elearning.index') }}" class="cta-button">Get Started</a>
+                        <a href="#skills" class="cta-button cta-button-outline">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide">
+            <img src="/static/images/multiethnic-designers-sitting-together-working-laptops-coworking-space.jpg" alt="Diverse Learning">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>Connect & Grow</h2>
+                    <p>Join a global community of developers, designers, and tech enthusiasts</p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('elearning.index') }}" class="cta-button">Join Now</a>
+                        <a href="#skills" class="cta-button cta-button-outline">Explore</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide">
+            <img src="/static/images/people-analyzing-checking-finance-graphs-office.jpg" alt="Data Analytics">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>Master Data & Analytics</h2>
+                    <p>Transform data into insights with our specialized courses</p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('elearning.index') }}" class="cta-button">Explore Courses</a>
+                        <a href="#skills" class="cta-button cta-button-outline">More Info</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Dots -->
+        <div class="slide-nav">
+            <span class="slide-dot active" onclick="currentSlide(0)"></span>
+            <span class="slide-dot" onclick="currentSlide(1)"></span>
+            <span class="slide-dot" onclick="currentSlide(2)"></span>
+            <span class="slide-dot" onclick="currentSlide(3)"></span>
+            <span class="slide-dot" onclick="currentSlide(4)"></span>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button class="slide-arrow prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="slide-arrow next" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+</section>
+
+<!-- Skills & Learning Paths Section -->
+<section class="skills-section" id="skills">
+    <div class="section-title-main">
+        <h2 style="white-space: nowrap;">Develop Your <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline;">/skills</span></h2>
+        <p>Master in-demand skills that will accelerate your career and unlock new opportunities</p>
+    </div>
+
+    <div class="skills-grid">
+        <div class="skill-card">
+            <div class="skill-icon">💻</div>
+            <h3>Web Development</h3>
+            <p>Learn HTML, CSS, JavaScript, React, and build modern responsive websites</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">🐍</div>
+            <h3>Python Programming</h3>
+            <p>Master Python for web apps, automation, data science, and machine learning</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">🤖</div>
+            <h3>AI & Machine Learning</h3>
+            <p>Explore artificial intelligence, neural networks, and deep learning techniques</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">📊</div>
+            <h3>Data Science</h3>
+            <p>Analyze big data, create visualizations, and make data-driven decisions</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">☁️</div>
+            <h3>Cloud Computing</h3>
+            <p>Deploy applications on AWS, Azure, and Google Cloud platforms</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">🔐</div>
+            <h3>Cybersecurity</h3>
+            <p>Protect systems and networks with ethical hacking and security best practices</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">📱</div>
+            <h3>Mobile Development</h3>
+            <p>Build iOS and Android apps with Flutter, React Native, and Swift</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">🎮</div>
+            <h3>Game Development</h3>
+            <p>Create games using Unity, Unreal Engine, and game development frameworks</p>
+        </div>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="{{ url_for('elearning.index') }}" class="cta-button">Explore All Courses</a>
+    </div>
+</section>
+
+<!-- Featured Courses Preview -->
+<section class="explore-more">
+    <h2>Start Your Learning Journey Today</h2>
+    <div class="course-preview">
+        <div class="course-card">
+            <h3>Full Stack Web Development</h3>
+            <p>Master frontend and backend technologies to build complete web applications</p>
+            <div class="course-badge">Beginner • 40 Hours</div>
+        </div>
+        <div class="course-card">
+            <h3>AI Fundamentals Bootcamp</h3>
+            <p>Get started with artificial intelligence and machine learning concepts</p>
+            <div class="course-badge">Intermediate • 60 Hours</div>
+        </div>
+        <div class="course-card">
+            <h3>Data Analysis Mastery</h3>
+            <p>Learn to extract insights from data using Python and visualization tools</p>
+            <div class="course-badge">Intermediate • 50 Hours</div>
+        </div>
+    </div>
+    <a href="{{ url_for('elearning.index') }}" class="cta-button">Browse All Courses</a>
+</section>
+
+<script>
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.slide-dot');
+    const slideCount = slides.length;
+    let autoSlideTimer;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        slides[n].classList.add('active');
+        dots[n].classList.add('active');
+    }
+
+    function changeSlide(n) {
+        clearTimeout(autoSlideTimer);
+        currentSlideIndex = (currentSlideIndex + n + slideCount) % slideCount;
+        showSlide(currentSlideIndex);
+        autoSlide();
+    }
+
+    function currentSlide(n) {
+        clearTimeout(autoSlideTimer);
+        currentSlideIndex = n;
+        showSlide(currentSlideIndex);
+        autoSlide();
+    }
+
+    function autoSlide() {
+        autoSlideTimer = setTimeout(() => {
+            currentSlideIndex = (currentSlideIndex + 1) % slideCount;
+            showSlide(currentSlideIndex);
+            autoSlide();
+        }, 5000); // Change slide every 5 seconds
+    }
+
+    // Start auto slideshow
+    autoSlide();
+</script>
+{% endblock %}
