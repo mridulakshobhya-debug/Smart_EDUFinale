@@ -32,6 +32,7 @@ class SmartThemeManager {
             document.body.setAttribute('data-theme', theme);
         }
         localStorage.setItem(this.storageKey, theme);
+        this.updateAllToggleIcons();
         
         if (notify) {
             this.showNotification(theme);
@@ -45,10 +46,47 @@ class SmartThemeManager {
     }
 
     setupEventListeners() {
-        const toggleButton = document.getElementById('themeToggle');
-        if (toggleButton) {
-            toggleButton.addEventListener('click', () => this.toggleTheme());
-        }
+        // Find all theme toggle buttons (main and navbar)
+        const toggleButtons = document.querySelectorAll('#themeToggle, .theme-toggle-btn');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.toggleTheme();
+                this.updateAllToggleIcons();
+            });
+        });
+    }
+    
+    updateAllToggleIcons() {
+        // Update all toggle button icons
+        const theme = this.htmlElement.getAttribute('data-theme') || 'light';
+        const toggleButtons = document.querySelectorAll('#themeToggle, .theme-toggle-btn');
+        
+        toggleButtons.forEach(button => {
+            const icon = button.querySelector('.theme-icon');
+            const sunIcon = button.querySelector('.sun-icon');
+            const moonIcon = button.querySelector('.moon-icon');
+            
+            // For navbar-style button (emoji icon)
+            if (icon && !sunIcon && !moonIcon) {
+                icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+            // For base-style button (SVG icons)
+            else if (sunIcon && moonIcon) {
+                if (theme === 'dark') {
+                    sunIcon.style.opacity = '1';
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.opacity = '0';
+                    moonIcon.style.display = 'none';
+                } else {
+                    sunIcon.style.opacity = '0';
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.opacity = '1';
+                    moonIcon.style.display = 'block';
+                }
+            }
+        });
     }
 
     showNotification(theme) {

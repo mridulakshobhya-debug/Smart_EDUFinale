@@ -120,6 +120,455 @@ MODULES = {
     'module6': {'name': 'Module 6: Mastery & Capstone Project', 'lessons': 4},
 }
 
+# Python-specific course modules
+PYTHON_BASICS_MODULES = {
+    'python-module1': {'name': 'Module 1: Python Syntax & Basics (Day 1-2)', 'lessons': 4},
+    'python-module2': {'name': 'Module 2: Variables & Data Types (Day 2)', 'lessons': 4},
+    'python-module3': {'name': 'Module 3: Input & Output (Day 3)', 'lessons': 4},
+    'python-module4': {'name': 'Module 4: Conditions & Logic (Day 3-4)', 'lessons': 4},
+    'python-module5': {'name': 'Module 5: Loops (Day 4-5)', 'lessons': 4},
+    'python-module6': {'name': 'Module 6: Functions (Day 5-6)', 'lessons': 4},
+    'python-module7': {'name': 'Module 7: Lists & Dictionaries (Day 6-7)', 'lessons': 4},
+    'python-module8': {'name': 'Module 8: File Handling (Day 7)', 'lessons': 4},
+    'python-module9': {'name': 'Module 9: Mini Projects (Day 7+)', 'lessons': 3},
+}
+
+# Module details with information, videos, and quiz questions
+PYTHON_BASICS_MODULE_DETAILS = {
+    'python-module1': {
+        'title': 'Python Syntax & Basics',
+        'description': 'Learn how Python runs code line by line, print function, and comments',
+        'video_url': 'https://www.youtube.com/embed/N4mEzFDjqtA?controls=1&modestbranding=0&rel=0&autoplay=0',
+        'video_duration': '4 hours',
+        'information': '''<h3>🐍 Getting Started with Python</h3>
+<p><strong>📺 What's in This Video:</strong></p>
+<p>This comprehensive tutorial covers: installing Python, writing your first program, understanding Python syntax, and using comments.</p>
+<p style="margin-top: 15px; padding: 10px; background: var(--bg-secondary); border-left: 4px solid var(--primary); border-radius: 4px;"><strong>▶️ Play the video above to get started!</strong> It has all the controls you need (play, pause, fullscreen, etc.).</p>
+<p><strong>STEP 1: Set Up Python (Day 1)</strong></p>
+<ul>
+<li>Install Python (latest version) from python.org</li>
+<li>Install VS Code</li>
+<li>Open VS Code → Install Python extension</li>
+<li>Create a folder named: <code>python-basics</code></li>
+<li>Create a file: <code>main.py</code></li>
+</ul>
+<h3>💡 What You'll Learn</h3>
+<ul>
+<li>✅ How Python runs code line by line</li>
+<li>✅ The print() function</li>
+<li>✅ Comments (#)</li>
+<li>✅ Understanding output</li>
+</ul>
+<h3>🎯 Practice Code</h3>
+<pre>print("Hello, Python")
+print(5 + 3)</pre>
+<p>👉 Run the file and understand output.</p>''',
+        'learning_objectives': [
+            'Understand how Python executes code',
+            'Master the print() function',
+            'Learn to use comments',
+            'Practice basic output'
+        ],
+        'quiz_questions': [
+            {
+                'question': 'What is the correct file extension for a Python file?',
+                'options': ['.pt', '.py', '.python', '.exe'],
+                'correct': 1,
+                'explanation': 'Python files use the .py extension.'
+            },
+            {
+                'question': 'Which function is used to display output in Python?',
+                'options': ['show()', 'output()', 'print()', 'display()'],
+                'correct': 2,
+                'explanation': 'The print() function displays output in Python.'
+            },
+            {
+                'question': 'What symbol is used for comments in Python?',
+                'options': ['//', '<!-- -->', '#', '/* */'],
+                'correct': 2,
+                'explanation': 'The hash symbol (#) is used for comments in Python.'
+            }
+        ]
+    },
+    'python-module2': {
+        'title': 'Variables & Data Types',
+        'description': 'Explore variables, int, float, string, and boolean data types',
+        'video_url': 'https://www.youtube.com/embed/N4mEzFDjqtA?controls=1&modestbranding=0&rel=0&autoplay=0&start=500',
+        'video_duration': '1.5 hours',
+        'information': '''<h3>📦 Variables & Data Types (Day 2)</h3>
+<p><strong>📺 What's in This Video:</strong></p>
+<p>Learn all about variables, integers, floating-point numbers, strings, booleans, and type conversion. Perfect for understanding Python's fundamental data types.</p>
+<p style="margin-top: 15px; padding: 10px; background: var(--bg-secondary); border-left: 4px solid var(--primary); border-radius: 4px;"><strong>▶️ Play the video above!</strong> It includes practical examples and exercises.</p>
+<p><strong>What to Learn:</strong></p>
+<ul>
+<li>Variables (storing data)</li>
+<li>int (integers)</li>
+<li>float (decimals)</li>
+<li>string (text)</li>
+<li>boolean (True/False)</li>
+</ul>
+<h3>🎯 Practice Code</h3>
+<pre>name = "Alex"
+age = 15
+height = 5.6
+is_student = True
+
+print(name)
+print(age)
+print(height)
+print(is_student)</pre>
+<p>👉 Print each variable and see different data types in action.</p>''',
+        'learning_objectives': [
+            'Create and use variables',
+            'Understand int, float, string, boolean types',
+            'Practice assigning values',
+            'Work with different data types'
+        ],
+        'quiz_questions': [
+            {
+                'question': 'Which of the following is a string?',
+                'options': ['25', 'True', '"Python"', '3.14'],
+                'correct': 2,
+                'explanation': 'A string is text enclosed in quotes. "Python" is a string.'
+            },
+            {
+                'question': 'What is the output?\nx = 10\ny = 5\nprint(x + y)',
+                'options': ['105', '15', 'x + y', 'Error'],
+                'correct': 1,
+                'explanation': '10 + 5 = 15. Variables hold numeric values.'
+            },
+            {
+                'question': 'What does type(10) return?',
+                'options': ['string', 'float', 'int', 'number'],
+                'correct': 2,
+                'explanation': 'type(10) returns int because 10 is an integer.'
+            }
+        ]
+    },
+    'python-module3': {
+        'title': 'Input & Output',
+        'description': 'Learn input() function and type conversion',
+        'video_url': 'https://www.youtube.com/embed/N4mEzFDjqtA?controls=1&modestbranding=0&rel=0&autoplay=0&start=1000',
+        'video_duration': '1 hour',
+        'information': '''<h3>⌨️ Input & Output (Day 3)</h3>
+<p><strong>📺 What's in This Video:</strong></p>
+<p>Master the input() function to get user data, learn type conversion with int(), str(), and float(), and combine input with output to build interactive programs.</p>
+<p style="margin-top: 15px; padding: 10px; background: var(--bg-secondary); border-left: 4px solid var(--primary); border-radius: 4px;"><strong>▶️ Play the video above!</strong> Watch step-by-step demonstrations of user interaction.</p>
+<p><strong>What to Learn:</strong></p>
+<ul>
+<li>input() function (getting user data)</li>
+<li>Type conversion (int(), str(), float())</li>
+<li>Combining input and output</li>
+</ul>
+<h3>🎯 Practice Code</h3>
+<pre>name = input("Enter your name: ")
+age = int(input("Enter your age: "))
+
+print("Hello", name)
+print("You are", age, "years old")</pre>
+<p>👉 Run it and enter your information.</p>''',
+        'learning_objectives': [
+            'Use input() to get user data',
+            'Convert data types with int(), str(), float()',
+            'Combine input and output',
+            'Build interactive programs'
+        ],
+        'quiz_questions': [
+            {
+                'question': 'What does input() return?',
+                'options': ['Integer', 'Float', 'String', 'Boolean'],
+                'correct': 2,
+                'explanation': 'input() always returns a string, even if you type a number.'
+            }
+        ]
+    },
+    'python-module4': {
+        'title': 'Conditions & Logic',
+        'description': 'Master if, elif, else statements and comparison operators',
+        'video_url': 'https://www.youtube.com/embed/N4mEzFDjqtA?controls=1&modestbranding=0&rel=0&autoplay=0&start=1500',
+        'video_duration': '45 minutes',
+        'information': '''<h3>🔀 Conditions & Logic (Day 3-4)</h3>
+<p><strong>📺 What's in This Video:</strong></p>
+<p>Learn if, elif, and else statements. Master comparison operators (==, !=, >, <, >=, <=) and logical operators (and, or, not) for building decision logic.</p>
+<p style="margin-top: 15px; padding: 10px; background: var(--bg-secondary); border-left: 4px solid var(--primary); border-radius: 4px;"><strong>▶️ Play the video above!</strong> Includes real-world examples of conditional statements.</p>
+<p><strong>What to Learn:</strong></p>
+<ul>
+<li>if, elif, else statements</li>
+<li>Comparison operators (==, !=, >, <, >=, <=)</li>
+<li>Logical operators (and, or, not)</li>
+</ul>
+<h3>🎯 Practice Code</h3>
+<pre>marks = int(input("Enter marks: "))
+
+if marks >= 90:
+    print("Grade A")
+elif marks >= 60:
+    print("Grade B")
+else:
+    print("Fail")</pre>
+<p>👉 Run and test different mark values.</p>''',
+        'learning_objectives': [
+            'Use if, elif, else statements',
+            'Apply comparison operators',
+            'Build decision logic',
+            'Solve conditional problems'
+        ],
+        'quiz_questions': [
+            {
+                'question': 'What is the output?\nage = 18\nif age >= 18:\n    print("Adult")\nelse:\n    print("Minor")',
+                'options': ['Minor', 'Adult', 'Error', 'Nothing'],
+                'correct': 1,
+                'explanation': 'Since age (18) >= 18 is True, it prints "Adult".'
+            },
+            {
+                'question': 'Which operator checks equality?',
+                'options': ['=', '!=', '==', '>='],
+                'correct': 2,
+                'explanation': '== is the equality operator (= is for assignment).'
+            }
+        ]
+    },
+    'python-module5': {
+        'title': 'Loops',
+        'description': 'Learn for loops and while loops',
+        'video_url': 'https://www.youtube.com/embed/N4mEzFDjqtA?controls=1&modestbranding=0&rel=0&autoplay=0&start=2000',
+        'video_duration': '1 hour',
+        'information': '''<h3>🔄 Loops (Day 4-5)</h3>
+<p><strong>📺 What's in This Video:</strong></p>
+<p>Understand for loops with range(), while loops, and loop control statements like break and continue. Learn how to automate repetitive tasks.</p>
+<p style="margin-top: 15px; padding: 10px; background: var(--bg-secondary); border-left: 4px solid var(--primary); border-radius: 4px;"><strong>▶️ Play the video above!</strong> Contains practical loop examples and common patterns.</p>
+<p><strong>What to Learn:</strong></p>
+<ul>
+<li>for loop (iterate a set number of times)</li>
+<li>while loop (iterate while condition is true)</li>
+<li>range() function</li>
+<li>break and continue keywords</li>
+</ul>
+<h3>🎯 Practice Code - For Loop</h3>
+<pre>for i in range(1, 6):
+    print(i)</pre>
+<h3>🎯 Practice Code - While Loop</h3>
+<pre>count = 1
+while count <= 5:
+    print(count)
+    count += 1</pre>
+<p>👉 Both will print 1 through 5.</p>''',
+        'learning_objectives': [
+            'Create for loops with range()',
+            'Create while loops',
+            'Understand loop control (break, continue)',
+            'Solve repetitive tasks'
+        ],
+        'quiz_questions': [
+            {
+                'question': 'How many times will this loop run?\nfor i in range(1, 5):\n    print(i)',
+                'options': ['5', '4', '3', 'Infinite'],
+                'correct': 1,
+                'explanation': 'range(1, 5) produces 1, 2, 3, 4 - that\'s 4 iterations.'
+            },
+            {
+                'question': 'What keyword is used to stop a loop?',
+                'options': ['stop', 'exit', 'break', 'end'],
+                'correct': 2,
+                'explanation': 'The break keyword stops a loop immediately.'
+            }
+        ]
+    },
+    'python-module6': {
+        'title': 'Functions',
+        'description': 'Create functions with parameters and return values',
+        'video_url': 'https://www.youtube.com/embed/N4mEzFDjqtA?controls=1&modestbranding=0&rel=0&autoplay=0&start=2500',
+        'video_duration': '50 minutes',
+        'information': '''<h3>⚙️ Functions (Day 5-6)</h3>
+<p><strong>📺 What's in This Video:</strong></p>
+<p>Learn how to define functions with the def keyword, use parameters as inputs, and return values as outputs. Discover how to reuse code effectively.</p>
+<p style="margin-top: 15px; padding: 10px; background: var(--bg-secondary); border-left: 4px solid var(--primary); border-radius: 4px;"><strong>▶️ Play the video above!</strong> Complete tutorial with function examples and best practices.</p>
+<p><strong>What to Learn:</strong></p>
+<ul>
+<li>Creating functions with def</li>
+<li>Parameters (inputs)</li>
+<li>Return values (outputs)</li>
+<li>Function calls</li>
+</ul>
+<h3>🎯 Practice Code</h3>
+<pre>def add(a, b):
+    return a + b
+
+result = add(5, 3)
+print(result)  # Output: 8</pre>
+<p>👉 Create your own functions to reuse code.</p>''',
+        'learning_objectives': [
+            'Define functions with def',
+            'Use parameters and arguments',
+            'Return values from functions',
+            'Call functions multiple times'
+        ],
+        'quiz_questions': [
+            {
+                'question': 'What is the output?\ndef add(a, b):\n    return a + b\nprint(add(2, 3))',
+                'options': ['23', '5', 'None', 'Error'],
+                'correct': 1,
+                'explanation': '2 + 3 = 5. The function returns and prints the result.'
+            }
+        ]
+    },
+    'python-module7': {
+        'title': 'Lists & Dictionaries',
+        'description': 'Work with lists and dictionaries for storing multiple values',
+        'video_url': 'https://www.youtube.com/embed/N4mEzFDjqtA?controls=1&modestbranding=0&rel=0&autoplay=0&start=3000',
+        'video_duration': '1.5 hours',
+        'information': '''<h3>📋 Lists & Dictionaries (Day 6-7)</h3>
+<p><strong>📺 What's in This Video:</strong></p>
+<p>Master working with lists using square brackets [], learn list methods like append() and remove(), and understand dictionaries with curly braces {} for key-value storage.</p>
+<p style="margin-top: 15px; padding: 10px; background: var(--bg-secondary); border-left: 4px solid var(--primary); border-radius: 4px;"><strong>▶️ Play the video above!</strong> Comprehensive guide to Python's most important data structures.</p>
+<p><strong>What to Learn:</strong></p>
+<ul>
+<li>Lists [ ] (ordered collections)</li>
+<li>Accessing list items</li>
+<li>Modifying lists (append, insert, remove)</li>
+<li>Dictionaries { } (key-value pairs)</li>
+<li>Accessing dictionary values</li>
+</ul>
+<h3>🎯 Practice Code - Lists</h3>
+<pre>numbers = [1, 2, 3, 4]
+numbers.append(5)
+print(numbers)  # [1, 2, 3, 4, 5]</pre>
+<h3>🎯 Practice Code - Dictionaries</h3>
+<pre>student = {
+    "name": "Alex",
+    "age": 15
+}
+print(student["name"])  # Alex</pre>''',
+        'learning_objectives': [
+            'Create and manipulate lists',
+            'Use list methods (append, remove, sort)',
+            'Create dictionaries',
+            'Access and modify dictionary values'
+        ],
+        'quiz_questions': [
+            {
+                'question': 'Which is a list?',
+                'options': ['(1, 2, 3)', '{1, 2, 3}', '[1, 2, 3]', '"1,2,3"'],
+                'correct': 2,
+                'explanation': '[1, 2, 3] is a list (square brackets).'
+            },
+            {
+                'question': 'How do you add an item to a list called nums?',
+                'options': ['nums.add(5)', 'nums.append(5)', 'nums.insert(5)', 'nums.push(5)'],
+                'correct': 1,
+                'explanation': 'The append() method adds an item to the end of a list.'
+            }
+        ]
+    },
+    'python-module8': {
+        'title': 'File Handling',
+        'description': 'Read and write files in Python',
+        'video_url': 'https://www.youtube.com/embed/N4mEzFDjqtA?controls=1&modestbranding=0&rel=0&autoplay=0&start=3500',
+        'video_duration': '30 minutes',
+        'information': '''<h3>📁 File Handling (Day 7)</h3>
+<p><strong>📺 What's in This Video:</strong></p>
+<p>Learn how to open files with open(), use different file modes (r for read, w for write, a for append), read and write file contents, and properly close files.</p>
+<p style="margin-top: 15px; padding: 10px; background: var(--bg-secondary); border-left: 4px solid var(--primary); border-radius: 4px;"><strong>▶️ Play the video above!</strong> Step-by-step file I/O operations with practical examples.</p>
+<p><strong>What to Learn:</strong></p>
+<ul>
+<li>Opening files (open())</li>
+<li>File modes: "r" (read), "w" (write), "a" (append)</li>
+<li>Reading files</li>
+<li>Writing to files</li>
+<li>Closing files</li>
+</ul>
+<h3>🎯 Practice Code - Write</h3>
+<pre>file = open("data.txt", "w")
+file.write("Hello File")
+file.close()</pre>
+<h3>🎯 Practice Code - Read</h3>
+<pre>file = open("data.txt", "r")
+content = file.read()
+print(content)
+file.close()</pre>''',
+        'learning_objectives': [
+            'Open files in different modes',
+            'Read file contents',
+            'Write data to files',
+            'Close files properly'
+        ],
+        'quiz_questions': [
+            {
+                'question': 'Which mode is used to write to a file?',
+                'options': ['"r"', '"a"', '"w"', '"x"'],
+                'correct': 2,
+                'explanation': '"w" mode opens a file for writing. It overwrites if file exists.'
+            }
+        ]
+    },
+    'python-module9': {
+        'title': 'Mini Projects & Practice',
+        'description': 'Build real projects: Number Guessing Game, Calculator, Student Marks System',
+        'video_url': 'https://www.youtube.com/embed/N4mEzFDjqtA?controls=1&modestbranding=0&rel=0&autoplay=0&start=4000',
+        'video_duration': '8 hours',
+        'information': '''<h3>🎮 Mini Practice Projects (Very Important)</h3>
+<p><strong>📺 What's in This Video:</strong></p>
+<p>This video showcases real projects you can build: Number Guessing Game, Simple Calculator, and Student Marks System. See how to integrate all Python basics concepts into complete working programs.</p>
+<p style="margin-top: 15px; padding: 10px; background: var(--bg-secondary); border-left: 4px solid var(--primary); border-radius: 4px;"><strong>▶️ Play the video above!</strong> Watch professional project demonstrations and best practices.</p>
+<p><strong>Build these WITHOUT copying:</strong></p>
+<h4>Project 1: Number Guessing Game</h4>
+<ul>
+<li>Generate a random number</li>
+<li>User guesses the number</li>
+<li>Give hints (too high/too low)</li>
+<li>Count attempts</li>
+</ul>
+<h4>Project 2: Simple Calculator</h4>
+<ul>
+<li>Take two numbers as input</li>
+<li>Choose operation (+, -, *, /)</li>
+<li>Display result</li>
+</ul>
+<h4>Project 3: Student Marks System</h4>
+<ul>
+<li>Store student names and marks</li>
+<li>Calculate average</li>
+<li>Find highest/lowest marks</li>
+<li>Assign grades</li>
+</ul>
+<h3>🟢 Daily Rules (IMPORTANT)</h3>
+<ul>
+<li>✅ Code every day (minimum 30 minutes)</li>
+<li>✅ Don't just read — type the code</li>
+<li>✅ Break code → fix it</li>
+<li>✅ Use Google only after trying</li>
+</ul>
+<h3>🎯 When Are You "Done" With Python Basics?</h3>
+<p>You are done when you can:</p>
+<ul>
+<li>✅ Write programs without copying</li>
+<li>✅ Understand errors</li>
+<li>✅ Explain your code in words</li>
+</ul>''',
+        'video_url': 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        'video_duration': '60 minutes',
+        'learning_objectives': [
+            'Integrate all Python basics concepts',
+            'Build complete working programs',
+            'Debug and fix errors',
+            'Understand your own code'
+        ],
+        'quiz_questions': [
+            {
+                'question': 'When are you "done" with Python basics?',
+                'options': [
+                    'When you finish all modules',
+                    'When you can write programs without copying and explain your code',
+                    'When you memorize all syntax',
+                    'When you complete one project'
+                ],
+                'correct': 1,
+                'explanation': 'True mastery comes when you can write and understand your own code.'
+            }
+        ]
+    }
+}
+
 # Module details with information, videos, and quiz questions
 MODULE_DETAILS = {
     'module1': {
@@ -394,6 +843,15 @@ def course_detail(course_id):
     
     is_enrolled = course_id in session['enrolled_courses']
     
+    # For python-basics, show modules instead of code editor
+    if course_id == 'python-basics':
+        modules = PYTHON_BASICS_MODULES
+        return render_template('course_modules.html', 
+                             course_name=course_name,
+                             course_id=course_id,
+                             modules=modules,
+                             is_enrolled=is_enrolled)
+    
     return render_template('course_detail.html', 
                          course_name=course_name, 
                          course_id=course_id,
@@ -407,6 +865,10 @@ def enroll_course(course_id):
     if course_id not in session['enrolled_courses']:
         session['enrolled_courses'].append(course_id)
         session.modified = True
+    
+    # For python-basics, redirect to modules view
+    if course_id == 'python-basics':
+        return redirect(url_for('elearning.course_detail', course_id=course_id))
     
     return render_template('course_detail.html', 
                          course_name=COURSES.get(course_id, {}).get('name', 'Course'),
@@ -428,8 +890,13 @@ def module_detail(course_id, module_id):
     
     is_enrolled = course_id in session['enrolled_courses']
     
-    module = MODULES.get(module_id, {'name': 'Module Not Found'})
-    module_info = MODULE_DETAILS.get(module_id, {})
+    # Check if it's a Python-basics course and use Python-specific modules
+    if course_id == 'python-basics':
+        module = PYTHON_BASICS_MODULES.get(module_id, {'name': 'Module Not Found'})
+        module_info = PYTHON_BASICS_MODULE_DETAILS.get(module_id, {})
+    else:
+        module = MODULES.get(module_id, {'name': 'Module Not Found'})
+        module_info = MODULE_DETAILS.get(module_id, {})
     
     return render_template('module_detail.html',
                          course_name=course_name,

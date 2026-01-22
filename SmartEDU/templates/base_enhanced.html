@@ -114,14 +114,24 @@
             init() {
                 // Load saved theme or default to 'light'
                 const savedTheme = localStorage.getItem('smartedu-theme') || 'light';
-                this.setTheme(savedTheme);
+                const html = document.documentElement;
+                const body = document.body;
+                
+                // Set theme attributes
+                html.setAttribute('data-theme', savedTheme);
+                body.setAttribute('data-theme', savedTheme);
+                
+                // Update icons and setup toggle
+                this.updateToggleIcon();
                 this.setupThemeToggle();
                 this.applySystemTheme();
             }
             
             setTheme(theme) {
                 const html = document.documentElement;
+                const body = document.body;
                 html.setAttribute('data-theme', theme);
+                body.setAttribute('data-theme', theme);
                 localStorage.setItem('smartedu-theme', theme);
                 this.updateToggleIcon();
             }
@@ -147,11 +157,17 @@
                 const moonIcon = toggle.querySelector('.moon-icon');
                 
                 if (theme === 'dark') {
+                    // In dark mode: show sun icon (to switch to light)
+                    sunIcon.style.opacity = '1';
                     sunIcon.style.display = 'block';
+                    moonIcon.style.opacity = '0';
                     moonIcon.style.display = 'none';
                     toggle.setAttribute('aria-label', 'Switch to Light Mode');
                 } else {
+                    // In light mode: show moon icon (to switch to dark)
+                    sunIcon.style.opacity = '0';
                     sunIcon.style.display = 'none';
+                    moonIcon.style.opacity = '1';
                     moonIcon.style.display = 'block';
                     toggle.setAttribute('aria-label', 'Switch to Dark Mode');
                 }

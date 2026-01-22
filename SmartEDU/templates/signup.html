@@ -465,7 +465,14 @@ function toggleTheme() {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     
     root.setAttribute('data-theme', newTheme);
+    document.body.setAttribute('data-theme', newTheme);
     localStorage.setItem('smartedu-theme', newTheme);
+    
+    // Update icon
+    const themeIcon = document.querySelector('.auth-theme-toggle .theme-icon');
+    if (themeIcon) {
+        themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    }
     
     // Show notification
     const message = newTheme === 'dark' ? '🌙 Dark Mode Enabled' : '☀️ Light Mode Enabled';
@@ -492,5 +499,12 @@ function toggleTheme() {
 document.addEventListener('DOMContentLoaded', function() {
     const savedTheme = localStorage.getItem('smartedu-theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
+    document.body.setAttribute('data-theme', savedTheme);
+    
+    // Update icon on load
+    const themeIcon = document.querySelector('.auth-theme-toggle .theme-icon');
+    if (themeIcon) {
+        themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
 });
 </script>

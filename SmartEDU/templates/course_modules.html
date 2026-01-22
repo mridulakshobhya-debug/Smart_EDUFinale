@@ -1,0 +1,197 @@
+{% extends "base_enhanced.html" %}
+
+{% block content %}
+<!-- Header Section -->
+<section style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(124, 58, 237, 0.1)); padding: 3rem 0; margin-bottom: 2rem;">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div>
+                <a href="{{ url_for('elearning.index') }}" style="color: var(--primary); text-decoration: none; font-weight: 600;">← Back to Courses</a>
+                <h1 style="margin: 0.5rem 0; font-size: 2.5rem;">{{ course_name }}</h1>
+                <p style="color: var(--text-secondary); margin: 0.5rem 0;">Learn Python step by step with our comprehensive curriculum</p>
+            </div>
+            {% if not is_enrolled %}
+            <a href="{{ url_for('elearning.enroll_course', course_id=course_id) }}" 
+               class="btn btn-primary" 
+               style="padding: 1rem 2rem; font-weight: 600;">
+                ✓ Enroll Now
+            </a>
+            {% else %}
+            <div style="padding: 1rem 1.5rem; background: var(--success); color: white; border-radius: 8px; font-weight: 600;">
+                ✓ Enrolled
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section style="padding: 2rem 0; margin-bottom: 3rem;">
+    <div class="container">
+        <!-- Course Overview -->
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div class="card" style="margin-bottom: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(124, 58, 237, 0.05)); border-left: 4px solid var(--primary);">
+                <h3 style="margin-top: 0;">📚 Course Overview</h3>
+                <p style="color: var(--text-secondary); line-height: 1.8;">
+                    This comprehensive Python Basics course is designed to take you from zero to hero in Python programming. 
+                    Over 7-9 days, you'll learn essential programming concepts through hands-on practice and real-world examples.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                    <div style="padding: 1rem; background: var(--bg-primary); border-radius: 8px; border: 1px solid var(--border);">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">9</div>
+                        <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 0.9rem;">Comprehensive Modules</p>
+                    </div>
+                    <div style="padding: 1rem; background: var(--bg-primary); border-radius: 8px; border: 1px solid var(--border);">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">15</div>
+                        <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 0.9rem;">Quiz Questions</p>
+                    </div>
+                    <div style="padding: 1rem; background: var(--bg-primary); border-radius: 8px; border: 1px solid var(--border);">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">7-9</div>
+                        <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 0.9rem;">Days to Complete</p>
+                    </div>
+                    <div style="padding: 1rem; background: var(--bg-primary); border-radius: 8px; border: 1px solid var(--border);">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">100%</div>
+                        <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 0.9rem;">Beginner Friendly</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modules Grid -->
+            <h2 style="margin-bottom: 2rem;">📖 Course Modules</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                {% for module_key, module in modules.items() %}
+                <div class="card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease; cursor: pointer;" 
+                     onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='var(--shadow-lg)'"
+                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-md)'">
+                    <!-- Module Header -->
+                    <div style="padding: 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;">
+                        <h3 style="margin: 0; font-size: 1.1rem;">{{ module.name }}</h3>
+                        <p style="margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.9rem;">{{ module.lessons }} lessons</p>
+                    </div>
+                    
+                    <!-- Module Content -->
+                    <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column;">
+                        <p style="color: var(--text-secondary); flex: 1; margin: 0 0 1rem 0;">
+                            {% if module_key == 'python-module1' %}
+                            Master Python syntax, print function, and comments
+                            {% elif module_key == 'python-module2' %}
+                            Learn variables and all basic data types
+                            {% elif module_key == 'python-module3' %}
+                            Get user input and handle type conversions
+                            {% elif module_key == 'python-module4' %}
+                            Build logic with if/elif/else statements
+                            {% elif module_key == 'python-module5' %}
+                            Master for and while loops
+                            {% elif module_key == 'python-module6' %}
+                            Create reusable functions with parameters
+                            {% elif module_key == 'python-module7' %}
+                            Work with lists and dictionaries
+                            {% elif module_key == 'python-module8' %}
+                            Read and write files in Python
+                            {% elif module_key == 'python-module9' %}
+                            Build 3 complete projects from scratch
+                            {% endif %}
+                        </p>
+                        <a href="{{ url_for('elearning.module_detail', course_id=course_id, module_id=module_key) }}" 
+                           class="btn btn-primary" 
+                           style="width: 100%; text-align: center; padding: 0.8rem;">
+                            Start Module →
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Learning Path Section -->
+            <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+                <h3>🎯 7-Day Learning Path</h3>
+                <div style="margin-top: 2rem;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <div style="min-width: 40px; width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">1</div>
+                        <div>
+                            <h4 style="margin: 0 0 0.5rem 0;">Day 1-2: Python Syntax & Variables</h4>
+                            <p style="color: var(--text-secondary); margin: 0;">Complete Module 1 & 2 - Learn print(), comments, variables, and data types</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <div style="min-width: 40px; width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">2</div>
+                        <div>
+                            <h4 style="margin: 0 0 0.5rem 0;">Day 3-4: Input & Conditions</h4>
+                            <p style="color: var(--text-secondary); margin: 0;">Complete Module 3 & 4 - Get user input and build conditional logic</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <div style="min-width: 40px; width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">3</div>
+                        <div>
+                            <h4 style="margin: 0 0 0.5rem 0;">Day 5-6: Loops & Functions</h4>
+                            <p style="color: var(--text-secondary); margin: 0;">Complete Module 5 & 6 - Master loops and create reusable functions</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <div style="min-width: 40px; width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">4</div>
+                        <div>
+                            <h4 style="margin: 0 0 0.5rem 0;">Day 6-7: Data Structures</h4>
+                            <p style="color: var(--text-secondary); margin: 0;">Complete Module 7 & 8 - Work with lists, dictionaries, and files</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <div style="min-width: 40px; width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">5</div>
+                        <div>
+                            <h4 style="margin: 0 0 0.5rem 0;">Day 7+: Build Projects</h4>
+                            <p style="color: var(--text-secondary); margin: 0;">Complete Module 9 - Build Number Guessing Game, Calculator & Marks System</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Tips -->
+            <div class="card" style="padding: 2rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05)); border-left: 4px solid var(--success);">
+                <h3 style="margin-top: 0;">💡 Tips for Success</h3>
+                <ul style="color: var(--text-secondary); line-height: 2; margin-left: 1.5rem;">
+                    <li><strong style="color: var(--text-primary);">Code Every Day:</strong> Dedicate at least 30 minutes daily to practice</li>
+                    <li><strong style="color: var(--text-primary);">Type, Don't Copy:</strong> Always type the code yourself, don't copy-paste</li>
+                    <li><strong style="color: var(--text-primary);">Break and Fix:</strong> Intentionally break code to understand errors</li>
+                    <li><strong style="color: var(--text-primary);">Use Google Wisely:</strong> Try solving problems first before searching</li>
+                    <li><strong style="color: var(--text-primary);">Practice Projects:</strong> Build the 3 mini projects to solidify learning</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.btn {
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1.5rem;
+    }
+}
+</style>
+{% endblock %}

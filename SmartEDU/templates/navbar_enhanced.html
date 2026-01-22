@@ -90,7 +90,7 @@
                 <!-- Right Side: Auth & User Menu -->
                 <div class="navbar-right">
                     <!-- Theme Toggle -->
-                    <button id="themeToggle" class="theme-toggle-btn" title="Toggle theme">
+                    <button id="navbarThemeToggle" class="theme-toggle-btn" title="Toggle theme">
                         <span class="theme-icon">🌙</span>
                     </button>
                     
@@ -443,20 +443,27 @@
         width: 40px;
         height: 40px;
         border-radius: 8px;
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         background: var(--bg-secondary);
         color: var(--text-primary);
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         font-size: 1.2rem;
         margin-right: 1rem;
         padding: 0;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] .theme-toggle-btn {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .theme-toggle-btn:hover {
-        background: var(--bg-tertiary);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(124, 58, 237, 0.1));
         border-color: var(--primary);
-        transform: scale(1.05);
+        transform: scale(1.08) rotate(10deg);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
     }
 
     .theme-toggle-btn:active {
@@ -467,11 +474,17 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        transition: transform 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        width: 100%;
+        height: 100%;
     }
 
     .theme-toggle-btn:hover .theme-icon {
-        transform: rotate(20deg);
+        transform: rotate(35deg) scale(1.2);
+    }
+    
+    .theme-toggle-btn:active .theme-icon {
+        transform: rotate(20deg) scale(0.9);
     }
 
     /* Responsive */
@@ -583,5 +596,63 @@
                 parent.classList.toggle('active');
             }
         });
+    });
+
+    // Theme Toggle - Connect navbar button to theme system
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize theme icon based on current theme
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme') || 'light';
+        const themeIcon = document.querySelector('.theme-toggle-btn .theme-icon');
+        if (themeIcon) {
+            themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+        }
+        
+        const themeToggleBtn = document.getElementById('themeToggle');
+        if (themeToggleBtn && themeToggleBtn.classList.contains('theme-toggle-btn')) {
+            themeToggleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Get current theme
+                const html = document.documentElement;
+                const currentTheme = html.getAttribute('data-theme') || 'light';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                // Update theme in HTML and body
+                html.setAttribute('data-theme', newTheme);
+                document.body.setAttribute('data-theme', newTheme);
+                
+                // Save to localStorage
+                localStorage.setItem('smartedu-theme', newTheme);
+                
+                // Update icon
+                const themeIcon = this.querySelector('.theme-icon');
+                if (themeIcon) {
+                    themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+                }
+                
+                // Show notification
+                const message = newTheme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode';
+                const notification = document.createElement('div');
+                notification.className = 'theme-notification';
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 30px;
+                    right: 30px;
+                    background: var(--primary);
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 50px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    z-index: 9999;
+                    font-weight: 600;
+                    animation: slideInUp 0.3s ease-out;
+                `;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 2000);
+            });
+        }
     });
 </script>

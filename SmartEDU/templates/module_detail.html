@@ -38,15 +38,15 @@
             <div class="card" style="margin-bottom: 2rem;">
                 <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px;">
                     <h3 style="margin-top: 0;">Module Video</h3>
-                    <div style="aspect-ratio: 16/9; margin-bottom: 1rem;">
+                    <div style="aspect-ratio: 16/9; margin-bottom: 1rem; position: relative;">
                         <iframe 
                             width="100%" 
                             height="100%" 
-                            src="{{ module_info.video_url }}" 
+                            src="{{ module_info.video_url }}?modestbranding=1&rel=0&controls=1" 
                             frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                             allowfullscreen
-                            style="border-radius: 8px;">
+                            style="border-radius: 8px; display: block;">
                         </iframe>
                     </div>
                     <p style="color: var(--text-secondary); margin: 0;">Duration: {{ module_info.video_duration }}</p>
@@ -242,38 +242,42 @@ function switchTab(event, tabName) {
     event.target.style.color = 'var(--text-primary)';
 }
 
-document.getElementById('quiz-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    // Get all answers
-    const answers = [];
+document.addEventListener('DOMContentLoaded', function() {
     const quizForm = document.getElementById('quiz-form');
-    const radios = quizForm.querySelectorAll('input[type="radio"]:checked');
-    
-    if (radios.length === 0) {
-        alert('Please answer at least one question.');
-        return;
-    }
-    
-    // Collect answers in order
-    radios.forEach(radio => {
-        answers.push(parseInt(radio.value));
-    });
-    
-    try {
-        const response = await fetch('{{ url_for("elearning.submit_quiz", course_id=course_id, module_id=module_id) }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ answers: answers })
+    if (quizForm) {
+        quizForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get all answers
+            const answers = [];
+            const radios = quizForm.querySelectorAll('input[type="radio"]:checked');
+            
+            if (radios.length === 0) {
+                alert('Please answer at least one question.');
+                return;
+            }
+            
+            // Collect answers in order
+            radios.forEach(radio => {
+                answers.push(parseInt(radio.value));
+            });
+            
+            try {
+                const response = await fetch('{{ url_for("elearning.submit_quiz", course_id=course_id, module_id=module_id) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ answers: answers })
+                });
+                
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error submitting quiz. Please try again.');
+            }
         });
-        
-        const data = await response.json();
-        displayResults(data);
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error submitting quiz. Please try again.');
     }
 });
 
